@@ -11,7 +11,6 @@ var xoffset = (screenWidth / 2) - (projectWidth / 2);
 var yoffset = (screenHeight / 2) - (projectHeight / 2);
 
 var windows = new Array();
-
 var winVars = new Array();
 
 // X, Y, WIDTH, HEIGHT
@@ -36,28 +35,13 @@ winVars[17] = new Array(1075,  528, 215, 264);
 winVars[18] = new Array(300, 0, 700, 700);  // finishing animation
  
 
-
-var timerOffset = 0;
-
-var totallyFinished = 0;
-
-function resetTimer() {
-	var dte = new Date();
-	var sec = dte.getMilliseconds();
-	timerOffset=sec;
-	
-}
-		
 function popUp(winNum) {
 	
 	var windowFeatures = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,left="+(winVars[winNum][0])+",top="+(winVars[winNum][1])+",width="+winVars[winNum][2]+",height="+winVars[winNum][3];
 	
-	if(winNum ==0){
- 	windows[winNum] = window.open( "levels/level"+winNum+".html", "myWindow"+winNum, windowFeatures);
-	}
-	else{
-	windows[winNum] = window.open( "../levels/level"+winNum+".html", "myWindow"+winNum, windowFeatures);
-	}
+	
+	windows[winNum] = window.open( "level"+winNum+".html", "myWindow"+winNum, windowFeatures);
+	
 	
 	//resetTimer();
 	
@@ -71,16 +55,23 @@ function winMove(winNum3, exPos, wyPos){
 winVars[winNum3][0]=exPos;
 winVars[winNum3][1]=wyPos;
 
-windows[winNum3]=windows.moveTo(winVars[winNum3][0],winVars[winNum3][1]);
+windows[winNum3].moveTo(winVars[winNum3][0],winVars[winNum3][1]);
 
+}
 
+function startUp(winNum4) {
+	
+	var windowFeatures = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,left="+(winVars[winNum4][0])+",top="+(winVars[winNum4][1])+",width="+winVars[winNum4][2]+",height="+winVars[winNum4][3];
+	
+	
+	windows[winNum4] = window.open( "levels/level"+winNum4+".html", "myWindow"+winNum4, windowFeatures);
+	
 
 }
 
 
 function closeWindows(winNum2){
 	
-
 /*
   var leave = confirm("Are you sure you want to leave?");
   if (!leave) {
@@ -89,7 +80,7 @@ function closeWindows(winNum2){
   } else {		
   //windows[winNum].close();
 	// cannot get for loop to do this correctly for some reason??
-	//windows[winNum2]=windows.close("window"+winNum2+".html");
+	windows[winNum2]=window.close("window"+winNum2+".html");
 	windows[winNum2]=window.close();
 	//windows[0].close();
 	//windows[2].close();
@@ -102,6 +93,7 @@ function closeWindows(winNum2){
     //windows[9].close();		
 	//windows[0].close();
   }*/
+  //windows[winNum2]=window.close("MyWindow"+winNum2);
   windows[winNum2]=window.close();
-  //return true;
+  return true;
 }

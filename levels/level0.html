@@ -52,17 +52,12 @@ $.get('../pd/level0.pd', function(patchFile) {
 });
 </script>
 
-<script type="text/javascript">
-function Sauvegarde(valeur1 , valeur2) {
-	window.localStorage['heroPosX']=valeur1;
-	window.localStorage['heroPosY']=valeur2;
-}
-</script>
+
 
 <script id="MySketch" type="application/processing"> 
 // binding processing and js
 interface JavaScript {
-    void Sauvegarde(float x); 
+    void popUp(int x); 
 }
 // this one will be called from our webpage see : pjs.bindJavaScript(this)
 void bindJavascript(JavaScript js) {
@@ -126,8 +121,7 @@ void draw() {
   patch.send("pjsvol3",pdvol3);
   patch.send("pjsvol4",pdvol4);
   
-  //Sauvegarde(hero.loc.x,hero.loc.y);
- 
+  
   if (mousePressed) {
     // Compute difference vector between mouse and object location
     // 3 steps -- (1) Get Mouse Location, (2) Get Difference Vector, (3) Normalize difference vector
@@ -161,8 +155,9 @@ void draw() {
 	hero.makeDisappear();
 	if (hero.alph<10){
 		patch.stop();
-		popUp(1);
-		closeWindows(0);
+		popUp(1,'level1');
+		window.close();
+		//closeWindows(0);
 	}
   }
   if (hero.loc.y>185){
@@ -170,8 +165,9 @@ void draw() {
 	hero.makeDisappear();
 	if (hero.alph<10){
 		patch.stop();
-		popUp(6);
-		closeWindows(0);
+		popUp(6, 'level6');
+		window.close();
+		//closeWindows(0);
 	}
   } 
 }

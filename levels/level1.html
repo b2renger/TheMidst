@@ -37,18 +37,12 @@
 			
 
 </script>
-<script type="text/javascript">
-	function Sauvegarde(valeur1 , valeur2) {
-		window.localStorage['heroPosX']=valeur1;
-		window.localStorage['heroPosY']=valeur2;
-		
-	}
-</script>
+
  <script id="MySketch" type="application/processing"> 
  // binding processing and js
- /*interface JavaScript {
-    void showXYCoordinates(int x, int y); 
-}*/
+ interface JavaScript {
+    void popUp(int x); 
+}
 // this one will be called from our webpage see : pjs.bindJavaScript(this)
 void bindJavascript(JavaScript js) {
     javascript = js; 
@@ -96,7 +90,7 @@ void draw() {
   }
   hero.go();
   
-  Sauvegarde(hero.loc.x+200,hero.loc.y);
+  
   
 	bumper.makeAppear();
 	bumper.goBumper();
@@ -130,8 +124,10 @@ void draw() {
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	popUp(0);
-	closeWindows(1);
+	
+	//closeWindows(1);
+	popUp(0,'level0');
+	window.close();
 	}
   }
   if (hero.loc.x<5 ){
@@ -153,8 +149,10 @@ void draw() {
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	popUp(2);
-	closeWindows(1);
+
+	//closeWindows(1);
+		popUp(2,'level2');
+		window.close();
 	}
   }
   if (hero.loc.y>195){
@@ -330,23 +328,10 @@ PVector componentVector (PVector vector, PVector directionVector) {
 }
 
 
-
-
- 
- 
- 
- 
-
-
-
-  </script> 
+</script> 
   
   
 <canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;" ></canvas>
-
-		
-			
-
 
 
 
