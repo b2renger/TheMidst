@@ -43,6 +43,79 @@ bindJavascript();
 </script>
 
 <script>
+    (function() {
+        var currentWindow = null;
+        var rootLocation = window.location.href.split('/').slice(0, -1).join('/');
+        var numWindows = 19;
+
+        var projectWidth = 1024;
+        var projectHeight = 768;
+
+        var screenWidth = screen.width;
+        var screenHeight = screen.height;
+
+        var xoffset = (screenWidth / 2) - (projectWidth / 2);
+        var yoffset = (screenHeight / 2) - (projectHeight / 2);
+
+        var winVars = new Array();
+        // X, Y, WIDTH, HEIGHT
+        winVars[0] = [0,  0,215, 264];  // level1	 
+        winVars[1] = [215, 0, 215, 264];	 // level2
+        winVars[2] = [430, 0, 215, 264];  // level3
+        winVars[3] = [645, 0, 215, 264];  
+        winVars[4] = [860,  0, 215, 264];  
+        winVars[5] = [1075, 0, 215, 264];  
+        winVars[6] = [0, 264, 215, 264];  
+        winVars[7] = [215,  264, 215, 264]; 
+        winVars[8] = [430, 264, 215, 264];  
+        winVars[9] = [645, 264, 215, 264];  
+        winVars[10] = [860,  264, 215, 264];   
+        winVars[11] = [1075, 264, 215, 264];	 
+        winVars[12] = [0, 528, 215, 264];  
+        winVars[13] = [215, 528, 215, 264];  
+        winVars[14] = [430,  528, 215, 264];  
+        winVars[15] = [645, 528, 215, 264];  
+        winVars[16] = [860, 528, 215, 264];  
+        winVars[17] = [1075,  528, 215, 264]; 
+        winVars[18] = [300, 0, 700, 700];  // finishing animation
+         
+
+        var popUp = this.popUp = function(winNum) {
+            if (currentWindow) {
+                console.log('closing window ' + currentWindow.name);
+                if (currentWindow.patch) currentWindow.patch.stop();
+                currentWindow.close();
+            // If no `currentWindow`, we assume that we are on index. 
+            } else {
+                window.patch.stop();
+            }
+            window.focus();
+	        currentWindow = getWindow(winNum);
+            console.log('opening window ' + currentWindow.name);
+	        currentWindow.focus();
+        }
+
+        var getWindow = function(winNum) {
+	        return window.open(rootLocation+"/levels/level"+winNum+".html", "myWindow"+winNum, 
+                "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,left="
+                +(winVars[winNum][0])+",top="+(winVars[winNum][1])+",width="+winVars[winNum][2]+",height="+winVars[winNum][3]);
+        }
+
+        function winMove(winNum3, exPos, wyPos){
+            winVars[winNum3][0]=exPos;
+            winVars[winNum3][1]=wyPos;
+            windows[winNum3].moveTo(winVars[winNum3][0],winVars[winNum3][1]);
+
+        }
+
+        function closeWindows(winNum2){
+            setTimeout (close(),50);
+            //return true;
+        }
+    }).call(this);
+</script>
+
+<script>
 var patch, sketch;
 	docH = $(window).height(), docW = $(window).width();
 
@@ -500,7 +573,7 @@ class PixelCloud {
 
 
 <canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;"></canvas>
-<input type="button" onClick="startUp(0)" value="Start">
+<input type="button" onClick="popUp(0)" value="Start">
 <div id="text"><font color="#FFFFFF" face ="Arial"></font></div>
 
 
