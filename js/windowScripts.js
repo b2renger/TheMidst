@@ -46,8 +46,11 @@ function popUp(winNum) {
 	//resetTimer();
 	
 	windows[winNum].moveTo(winVars[winNum][0],winVars[winNum][1]);
+	
+	focus();
 	//set focus
 	//alert("x: "+ windows.length+", "+"y: "+windows[2].length);
+	
 }
 
 function winMove(winNum3, exPos, wyPos){
@@ -94,6 +97,7 @@ function closeWindows(winNum2){
 	//windows[0].close();
   }*/
   //windows[winNum2]=window.close("MyWindow"+winNum2);
-  windows[winNum2]=window.close();
-  return true;
+  //error generated on purpose
+  setTimeout (close(),50);
+  //return true;
 }

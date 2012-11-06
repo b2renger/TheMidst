@@ -41,7 +41,7 @@
  <script id="MySketch" type="application/processing"> 
  // binding processing and js
  interface JavaScript {
-    void popUp(int x); 
+    //void popUp(int x); 
 }
 // this one will be called from our webpage see : pjs.bindJavaScript(this)
 void bindJavascript(JavaScript js) {
@@ -126,7 +126,7 @@ void draw() {
 	if (hero.alph<10){
 	
 	//closeWindows(1);
-	popUp(0,'level0');
+	popUp(0);
 	window.close();
 	}
   }
@@ -151,7 +151,7 @@ void draw() {
 	if (hero.alph<10){
 
 	//closeWindows(1);
-		popUp(2,'level2');
+		popUp(2);
 		window.close();
 	}
   }

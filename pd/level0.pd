@@ -3,12 +3,12 @@
 #X obj -24 -81 mtof;
 #X obj -22 194 *~;
 #X obj 676 428 *~;
-#X obj 837 461 line~;
+#X obj 829 409 line~;
 #X obj 124 -80 mtof;
 #X obj 124 195 *~;
 #X obj 270 -80 mtof;
 #X obj 270 195 *~;
-#X obj 677 466 dac~;
+#X obj 651 828 dac~;
 #X msg 151 -271 bang;
 #X obj 270 -53 phasor~;
 #X obj 271 -24 -~ 0.5;
@@ -41,7 +41,7 @@
 #X obj 142 240 receive pjsvol2;
 #X obj 288 263 receive pjsvol3;
 #X obj 432 239 receive pjsvol4;
-#X obj 967 435 receive pjsquit;
+#X obj 959 383 receive pjsquit;
 #X obj -4 162 line~;
 #X obj 142 164 line~;
 #X obj 289 167 line~;
@@ -50,7 +50,7 @@
 #X msg 289 139 \$1 50;
 #X msg 432 142 \$1 50;
 #X msg -4 134 \$1 50;
-#X msg 967 461 0 250;
+#X msg 959 409 0 250;
 #X obj 675 19 line~;
 #X obj 737 42 line~;
 #X obj 676 45 osc~;
@@ -83,7 +83,7 @@
 #X obj 675 -90 trigger bang;
 #X obj 896 -94 trigger bang;
 #X obj 675 -297 receive pjsdrums;
-#X msg 902 461 0.5 500;
+#X msg 894 409 0.5 500;
 #X msg 1020 -14 500 1;
 #X obj 950 146 lop~ 1000;
 #X msg 1025 119 0 99;
@@ -139,8 +139,10 @@
 #X msg 124 -104 66;
 #X msg 270 -104 70;
 #X msg 414 -105 75;
+#X msg 611 236 bang;
 #X connect 0 0 10 0;
 #X connect 0 0 25 0;
+#X connect 0 0 140 0;
 #X connect 1 0 15 0;
 #X connect 2 0 30 0;
 #X connect 3 0 9 0;
