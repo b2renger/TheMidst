@@ -1,129 +1,56 @@
-<!DOCTYPE html>
-<html class="vocabbi_document">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
-
-  <script src="../js/processing-1.4.1.min.js"></script>
-  <script src="../js/windowScripts.js"></script>
-  <script src="../js/webpd-latest.min.js"></script>
-  <script src="../js/jquery-1.8.2.min.js"></script>
-
-  <style>body { margin: 0px; overflow:hidden }</style> 
- 
-</head>
-
-<body marginheight="0" marginwidth="0"> 
-
-<script type="application/javascript">
-// some js code to bind our page to pjs by Id 
-//var bound = false;
-// function to loop if not bound
-//function bindJavascript() {
-// point to our canvas id
-	//var pjs = Processing.getInstanceById('canvas');
-	//if(pjs!=null) {
-		// call the bindJavascript function from our sketch
-		//pjs.bindJavascript(this);
-		//bound = true; 
-		//}
-	// retry ...
-	//if(!bound) {{setTimeout(bindJavascript, 250);
-	//}
-// do it !
-//bindJavascript();
-//}
-</script>
-
-<script>
-var patch, sketch;
-   // docH = $(window).height(), docW = $(window).width();
-
-$.get('../pd/level0.pd', function(patchFile) {
-	patch = Pd.compat.parse(patchFile);
-
-	// WebPd patch -> Processing.js sketch
-	// -------------------------------------
-	// This is how you receive a message from a patch, and send it to processing
-	//
-	// patch.receive('thunder', function() {
-	//     sketch.startLightning();
-	// });
-
-	sketch = Processing.getInstanceById('MySketch');
-	patch.play();
-});
-</script>
-
-
-
-<script id="MySketch" type="application/processing"> 
-// binding processing and js
-//interface JavaScript {
-    //void popUp(int x); 
-//}
-// this one will be called from our webpage see : pjs.bindJavaScript(this)
-//void bindJavascript(JavaScript js) {
-//    javascript = js; 
-//}
-// declare a javacript object that will be used when we want to send values to it
-// check the mouseMoved() function
-//JavaScript javascript;
-
 // let's do some processing
 Hero hero;
+Hero bumper;
+
 color boyColor = color(180);
+
 boolean movingOn = false;
-float timer =0;
 
 void setup() {
   size(200, 200);
   background(0);
   strokeWeight(2);
   stroke(180);
-  PVector a = new PVector(0.0, 0.125);
+  PVector a = new PVector(0.0, 0.0);
   PVector v = new PVector(0.0, 0.0);
   PVector l = new PVector(width/2, height/2);
-  hero = new Hero(a, v, l);
+  hero = new Hero(a, v, l,20,20,boyColor);
+  
+PVector amh = new PVector(-10.0, 0.0);
+  PVector vmh = new PVector(-100.0, 0.0);
+  PVector lmh = new PVector(300,100);
+	
+	bumper = new Hero(amh,vmh,lmh,140,1500,color(180));
+    
 }
 
 void draw() {
   background(0);
+  
   float c = -0.23;                            // Drag coefficient
   PVector heroVel = hero.getVel();              // Velocity of our thing
   PVector force = PVector.mult(heroVel, c);   // Following the formula
   hero.applyForce(force);                        // Adding the force to our object, which will ultimately affect its acc
-  
   // Run the Thing object
   if (movingOn== false){
-	hero.makeAppear();
-  }
-  else {
-	patch.send("pjsquit","bang");
+  hero.makeAppear();
   }
   hero.go();
   
-  // SOUND !!
-  float pdtwee1 = map(cos(hero.tweenfactor/4),-1,1,0,1);
-  patch.send("pjstween1",pdtwee1);
-  float pdtwee2 = map(cos(hero.tweenfactor/4 + PI*3/2),-1,1,0,1);
-  patch.send("pjstween2",pdtwee2);
-  float pdtwee3 = map(cos(hero.tweenfactor/4+ PI/2),-1,1,0,1);
-  patch.send("pjstween3",pdtwee3);
-  float pdtwee4 = map(cos(hero.tweenfactor/4+PI),-1,1,0,1);
-  patch.send("pjstween4",pdtwee4);
-  
-  float hposX = map (hero.loc.x,0,width,0,1);
-  float hposY = map (hero.loc.y,0,height,0,1);
-  float pdvol1 = hposX;
-  float pdvol2 = 1-hposX;
-  float pdvol3 = hposY;
-  float pdvol4 = 1-hposY;
-  patch.send("pjsvol1",pdvol1);
-  patch.send("pjsvol2",pdvol2);
-  patch.send("pjsvol3",pdvol3);
-  patch.send("pjsvol4",pdvol4);
   
   
+	bumper.makeAppear();
+	bumper.goBumper();
+
+  
+  hero.collideEqualMass(bumper);
+  
+  bumper.loc.x= constrain(bumper.loc.x,249,251);
+  bumper.loc.y= constrain(bumper.loc.y,99,101);
+  
+  
+  
+
   if (mousePressed) {
     // Compute difference vector between mouse and object location
     // 3 steps -- (1) Get Mouse Location, (2) Get Difference Vector, (3) Normalize difference vector
@@ -140,39 +67,54 @@ void draw() {
   }
   
   // boundaries
-  if (hero.loc.x<5){
-    PVector newV = hero.getVel();
+  if (hero.loc.x<25 && hero.loc.y>75 && hero.loc.y<125){
+	movingOn = true;
+	hero.makeDisappear();
+	if (hero.alph<10){
+	
+	//closeWindows(1);
+	popUp(0);
+	window.close();
+	}
+  }
+  if (hero.loc.x<5 ){
+	if(hero.loc.y<75 || hero.loc.y>125){
+  PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
-	patch.send("pjsdrums","bang");
+	
+	}
+  
   }
+  
   if (hero.loc.y<5){
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
-	patch.send("pjsdrums","bang");
   }
-  if (hero.loc.x>185){
+  if (hero.loc.x>190){
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-		patch.stop();
-		popUp(1);
-		//window.close();
-		closeWindows(0);
+
+	//closeWindows(1);
+		popUp(2);
+		window.close();
 	}
   }
-  if (hero.loc.y>185){
-	movingOn = true;
-	hero.makeDisappear();
-	if (hero.alph<10){
-		patch.stop();
-		popUp(6);
-		//window.close();
-		closeWindows(0);
-	}
-  } 
+  if (hero.loc.y>195){
+	PVector newV = hero.getVel();
+    newV.y*=-1;
+    hero.setVel(newV);
+  }
+  
+  
+  
+  
+  
 }
+
+
 
 class Hero {
   PVector loc;
@@ -181,26 +123,47 @@ class Hero {
   float maxvel;
   float mass;
   // to tween our object
-  float diameter =20;
+  float diameter ;
   float sDist;
   float tweenfactor=0;
   float cellS, cellS2;
+  
+  color heroColor;
   // to makeAppear() and makeDisAppear()
   float alph = 0;
+  //colliding
+   boolean colliding = false;
+   float noiseFactor;
+
 
   //The Constructor (called when the object is first created)
-  Hero(PVector a, PVector v, PVector l) {
+  Hero(PVector a, PVector v, PVector l, float diam, float mass0, color color0) {
     acc = a;
     vel = v;
     loc = l;
     maxvel = 4;
     mass = 20;
+	diameter = diam;
+	mass=mass0;
+	noiseFactor= random(500);
+	heroColor = color (color0);
   }
   //main function to operate object
   void go() {
     update();  
+	 tween(); // change appearance while moving
     render();
   }
+  
+  void goBumper(){
+	update();
+	diameter =  constrain(map(noise(noiseFactor,10,20),0,1,-2,2.1)+diameter,160,190);
+	noiseFactor+=0.04;
+	//cellS2 = random(-10,10);
+	render();
+  
+  }
+  
   //function to update location
   void update() {
     vel.add(acc);
@@ -214,11 +177,11 @@ class Hero {
   //function to display
   void render() {
     strokeWeight(8);
-    stroke(boyColor, alph);
+    stroke(heroColor, alph);
     fill(175,alph);
-    tween(); // change appearance while moving
     ellipse(loc.x, loc.y, diameter-cellS, diameter+cellS2);
   }
+ 
   // transform movement (used in draw)
   void applyForce(PVector force) {
     force.div(mass);   // Newton's second law
@@ -255,12 +218,8 @@ class Hero {
     else {
       tweenfactor+= map(sDist, 0,75,0.09,0.25);
     }
-	
-	//patch.send("pdtween",cos(tweenfactor));
-	
     //scale our multiplication factor for our tween effect
     float sMult = map(sDist, 0, 100, 0.09*diameter, .25 * diameter);
-	//println(cos(tweenfactor));
     // fill to global variables  to affect the drawing of our ellipse
     cellS = sMult * cos(tweenfactor);
     cellS2 = sMult * (.5 +(cos(tweenfactor)/2));
@@ -275,9 +234,44 @@ class Hero {
     alph-=10;
     alph = constrain(alph,0,180);
   }
-}
-</script> 
   
-<canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;"></canvas>
+  // collision
+  void collideEqualMass(Hero other) {
+    float d = PVector.dist(loc,other.loc);
+    float sumDiam = diameter/2 + other.diameter/2;
+    // Are they colliding?
+    if (!colliding && d < sumDiam) {
+      // Yes, make new velocities!
+      colliding = true;
+	  
+	  
+      // Direction of one object another
+      PVector n = PVector.sub(other.loc,loc);
+      n.normalize();
 
-</body></html>
+      // Difference of velocities so that we think of one object as stationary
+      PVector u = PVector.sub(vel,other.vel);
+
+      // Separate out components -- one in direction of normal
+      PVector un = componentVector(u,n);
+      // Other component
+      u.sub(un);
+      // These are the new velocities plus the velocity of the object we consider as stastionary
+      vel = PVector.add(u,other.vel);
+      other.vel = PVector.add(un,other.vel);
+    } 
+    else if (d > sumDiam) {
+      colliding = false;
+    }
+  }
+}
+PVector componentVector (PVector vector, PVector directionVector) {
+  //--! ARGUMENTS: vector, directionVector (2D vectors)
+  //--! RETURNS: the component vector of vector in the direction directionVector
+  //-- normalize directionVector
+  directionVector.normalize();
+  directionVector.mult(vector.dot(directionVector));
+  return directionVector;
+}
+
+

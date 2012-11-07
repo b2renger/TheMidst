@@ -1,67 +1,11 @@
-<!DOCTYPE html>
-<html class="vocabbi_document"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
 
-<script src="../js/processing-1.4.1.min.js"></script>
-  <script src="../js/windowScripts.js"></script>
-  <script src="../js/webpd-latest.min.js"></script>
-  <script src="../js/jquery-1.8.2.min.js"></script>
-  
-  
-  <style>body { margin: 0px; overflow:hidden }</style> 
+// arrayList
+// class Floor and orthogonal sticky collision 
+// detereministic timing of event using frameCount
 
- </head><body marginheight="0" marginwidth="0" onunload="return closeWindows();"> 
-<script type="application/javascript">
-// some js code to bind our page to pjs by Id 
+// inverse flux when commin from top or bottom ? store position of the hero at the end of this case
+// and restore it in cases above and below as initializing position for the hero.
 
-			
-			
-			var bound = false;
-			// function to loop if not bound
-			function bindJavascript() {
-			// point to our canvas id
-				var pjs = Processing.getInstanceById('canvas');
-				if(pjs!=null) {
-					// call the bindJavascript function from our sketch
-					pjs.bindJavascript(this);
-					bound = true; 
-					}
-				// retry ...
-				if(!bound) setTimeout(bindJavascript, 250);
-				}
-			// do it !
-			bindJavascript();
-			
-			// a js function to fill our text filed with values received from our sketch 
-			// this will call the function available in ou pjs sketch
-			
-			
-
-
-			}
-			
-
-			
-
-</script>
-<script type="text/javascript">
-	function Sauvegarde(valeur1 , valeur2) {
-		window.localStorage['heroPosX']=valeur1;
-		window.localStorage['heroPosY']=valeur2;
-		
-	}
-</script>
- <script id="MySketch" type="application/processing"> 
- // binding processing and js
- /*interface JavaScript {
-    void showXYCoordinates(int x, int y); 
-}*/
-// this one will be called from our webpage see : pjs.bindJavaScript(this)
-void bindJavascript(JavaScript js) {
-    javascript = js; 
-}
-// declare a javacript object that will be used when we want to send values to it
-// check the mouseMoved() function
-JavaScript javascript;
 
 
 
@@ -77,7 +21,7 @@ JavaScript javascript;
 
 Hero hero;
 ArrayList floors;
-boolean movingOn = false;
+boolean movingOn;
 
 void setup() {
   size(200, 200);
@@ -142,34 +86,43 @@ void draw() {
     hero.setAcc(new PVector(0, 0));
   }
   
-  if (hero.loc.x<5){
+  if (hero.loc.x<15){
+    movingOn = true;
+    hero.makeDisappear();
+    if (hero.alph<10) {
+      popUp(16);
+	  closeWindows(17);
+    }
+  }
+  
+  if (hero.loc.x>195 && hero.loc.y < 50){
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
   }
-  
-  if (hero.loc.x>195){
-    PVector newV = hero.getVel();
-    newV.x*=-1;
-    hero.setVel(newV);
+  if (hero.loc.x>185 && hero.loc.y > 50){
+  ovingOn = true;
+    hero.makeDisappear();
+    if (hero.alph<10) {
+      popUp(18);
+	  closeWindows(17);
+    }
+    
   }
   
   if (hero.loc.y<15){
     movingOn = true;
     hero.makeDisappear();
     if (hero.alph<10) {
-      popUp(5);
-	  closeWindows(11);
+      popUp(11);
+	  closeWindows(17);
     }
   }
   
-  if (hero.loc.y>185){
-    movingOn = true;
-    hero.makeDisappear();
-    if (hero.alph<10) {
-      popUp(17);
-	  closeWindows(11);
-    }
+  if (hero.loc.y>195){
+    PVector newV = hero.getVel();
+    newV.y*=-1;
+    hero.setVel(newV);
   }
 
 }
@@ -320,19 +273,3 @@ class Floor{
   
 }
 
-
-
-
-  </script> 
-  
-  
-<canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;" width="222" height="50"></canvas>
-
-		
-			
-
-
-
-
-
-</body></html>
