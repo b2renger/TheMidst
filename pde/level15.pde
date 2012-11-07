@@ -1,70 +1,3 @@
-<!DOCTYPE html>
-<html class="vocabbi_document"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
-<script src="../js/processing-1.4.1.min.js"></script>
-  <script src="../js/windowScripts.js" language="javascript"></script>
-  <script src="../js/webpd-latest.min.js"></script>
-  <script src="../js/jquery-1.8.2.min.js"></script>
-  
-  
-  <style>body { margin: 0px; overflow:hidden }</style> 
-
- </head><body marginheight="0" marginwidth="0" onunload="return closeWindows();"> 
-<script type="application/javascript">
-// some js code to bind our page to pjs by Id 
-
-			
-			
-			var bound = false;
-			// function to loop if not bound
-			function bindJavascript() {
-			// point to our canvas id
-				var pjs = Processing.getInstanceById('canvas');
-				if(pjs!=null) {
-					// call the bindJavascript function from our sketch
-					pjs.bindJavascript(this);
-					bound = true; 
-					}
-				// retry ...
-				if(!bound) setTimeout(bindJavascript, 250);
-				}
-			// do it !
-			bindJavascript();
-			
-			// a js function to fill our text filed with values received from our sketch 
-			// this will call the function available in ou pjs sketch
-			
-			
-
-
-			}
-			
-
-			
-
-</script>
-<script type="text/javascript">
-	function Sauvegarde(valeur1 , valeur2) {
-		window.localStorage['heroPosX']=valeur1;
-		window.localStorage['heroPosY']=valeur2;
-		
-	}
-</script>
- <script id="MySketch" type="application/processing"> 
- // binding processing and js
- /*interface JavaScript {
-    void showXYCoordinates(int x, int y); 
-}*/
-// this one will be called from our webpage see : pjs.bindJavaScript(this)
-void bindJavascript(JavaScript js) {
-    javascript = js; 
-}
-// declare a javacript object that will be used when we want to send values to it
-// check the mouseMoved() function
-JavaScript javascript;
-
-
-
-
 
 
 Hero hero;
@@ -73,35 +6,6 @@ ArrayList segments;
 Segment segment;
 
 boolean movingOn = false;
-
-
-// function to generate big or small numbers to place our lines randomely
-float small(){
-  return random(5,75);
-}
-float big(){
- return random(125,200); 
-}
-
-void addSegment (String type){
- if (type == "TOP"){
-   segments.add(new Segment(small(), small(), big(), small())); //TOP 
- }
- 
- if (type == "LEFT"){
-   segments.add(new Segment(small(), small(), small(), big())); //LEFT 
- }
-  
- if (type == "BOTTOM"){
-   segments.add(new Segment(small(), big(), big(), big()));//BOTTOM  
- }
-  
- if (type == "RIGHT"){
-   segments.add(new Segment(big(), small(), big(), big())); // RIGHT
- } 
-  
-  
-}
 
 void setup() {
   size(200, 200);
@@ -117,12 +21,12 @@ void setup() {
 
 
   
-  for (int i = 0 ; i<5; i++){
-    addSegment("TOP");
-    addSegment("LEFT");
-    addSegment("RIGHT");   
-    addSegment("BOTTOM");
-  }
+
+  segments.add(new Segment(25, 25, 175, 25));
+  segments.add(new Segment(175, 25, 175, 175));
+  segments.add(new Segment(175, 175, 25, 175));
+  segments.add(new Segment(25, 175, 25, 25));
+
 
 
 }
@@ -156,28 +60,30 @@ void draw() {
     hero.setAcc(new PVector(0, 0));
   }
 
-  if (hero.loc.x<15) {
-     movingOn = true;
-	hero.makeDisappear();
-	if (hero.alph<10){
-	popUp(15);
-	closeWindows(16);
-	}
+  if (hero.loc.x<5) {
+    PVector newV = hero.getVel();
+    newV.x*=-1;
+    hero.setVel(newV);
   }
 
   if (hero.loc.x>185) {
-     movingOn = true;
+  movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	popUp(17);
+	popUp(16);
 	closeWindows(15);
 	}
+    
   }
 
-  if (hero.loc.y<5) {
-    PVector newV = hero.getVel();
-    newV.y*=-1;
-    hero.setVel(newV);
+  if (hero.loc.y<15) {
+  movingOn = true;
+	hero.makeDisappear();
+	if (hero.alph<10){
+	popUp(9);
+	closeWindows(15);
+	}
+    
   }
 
   if (hero.loc.y>195) {
@@ -193,37 +99,8 @@ void draw() {
 
     if (seg.alive == false) {
       segments.remove(i);
-      
-      // do probabilities !
-      float randNumb = random(100);
-      
-      if (randNumb <25){
-        addSegment("BOTTOM");
-      }
-      if (randNumb >25 && randNumb <50){
-        addSegment("TOP");
-      }
-      if (randNumb >50 && randNumb <75){
-        addSegment("RIGHT");
-      }
-      if (randNumb >75){
-        addSegment("LEFT");
-      }
-      
     }
   }
-  
-  
-  if (frameCount%250>245){
-  addSegment("BOTTOM");
-  addSegment("LEFT");
-  addSegment("RIGHT");
-  addSegment("TOP");
-  }
- 
-  
-  
-  
 }
 
 
@@ -367,7 +244,7 @@ void handleCollisions(Hero t, Segment segment) {
     // Give a slightly stronger force for lines closer to
     // the center of the circle.
     PVector force = PVector.div(dist_v, dist_v.mag());
-    force.mult(7 * pow(dist_v.mag(), -1));
+   // force.mult(5 * pow(dist_v.mag(), -1));
 
     // Keep the ball's initial velocity parallel to the line,
     // but replace its velocity perpindicular to the line with
@@ -439,25 +316,8 @@ float ccw(PVector p1, PVector p2, PVector p3) {
     - (p2.y - p1.y) * (p3.x - p1.x);
 }  
 
-
-
  
  
  
  
 
-
-
-  </script> 
-  
-  
-<canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;" width="222" height="50"></canvas>
-
-		
-			
-
-
-
-
-
-</body></html>
