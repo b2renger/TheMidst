@@ -1,128 +1,22 @@
-<!DOCTYPE html>
-<html class="vocabbi_document">
-<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
-
-  <script src="../js/processing-1.4.1.min.js"></script>
-  <script src="../js/windowScripts.js"></script>
-  <script src="../js/webpd-latest.min.js"></script>
-  <script src="../js/jquery-1.8.2.min.js"></script>
-  
-  <style>body { margin: 0px; overflow:hidden }</style> 
-
-</head>
-
-<body marginheight="0" marginwidth="0" onunload="return closeWindows();"> 
-
-<script type="application/javascript">
-// some js code to bind our page to pjs by Id 
-var bound = false;
-	// function to loop if not bound
-	function bindJavascript() {
-		// point to our canvas id
-		var pjs = Processing.getInstanceById('canvas');
-		if(pjs!=null) {
-			// call the bindJavascript function from our sketch
-			pjs.bindJavascript(this);
-			bound = true; 
-			}
-		    // retry ...
-			if(!bound) setTimeout(bindJavascript, 250);
-			}
-			// do it !
-			bindJavascript();
-	}
-</script>
-
-<script type="text/javascript">
-	function Sauvegarde(valeur1 , valeur2) {
-		window.localStorage['heroPosX']=valeur1;
-		window.localStorage['heroPosY']=valeur2;
-	}
-</script>
-
-<script>
-var patch, sketch;
-// docH = $(window).height(), docW = $(window).width();
-
-$.get('../pd/level13.pd', function(patchFile) {
-    patch = Pd.compat.parse(patchFile);       
-    // WebPd patch -> Processing.js sketch
-    // -------------------------------------
-    // This is how you receive a message from a patch, and send it to processing
-    //
-    // patch.receive('thunder', function() {
-    //     sketch.startLightning();
-    // });
-    sketch = Processing.getInstanceById('MySketch');
-    patch.play();
- });
-</script>
-
- <script id="MySketch" type="application/processing"> 
- // binding processing and js
- /*interface JavaScript {
-    void showXYCoordinates(int x, int y); 
-}*/
-// this one will be called from our webpage see : pjs.bindJavaScript(this)
-void bindJavascript(JavaScript js) {
-    javascript = js; 
-}
-// declare a javacript object that will be used when we want to send values to it
-// check the mouseMoved() function
-JavaScript javascript;
-
 // let's do some processing
 Hero hero;
+color boyColor = color(180);
 boolean movingOn = false;
-noiseFactor= random(500);
+float timer =0;
 
 void setup() {
   size(200, 200);
   background(0);
   strokeWeight(2);
   stroke(180);
-  PVector a = new PVector(0.5,0.525);
+  PVector a = new PVector(0.0, 0.125);
   PVector v = new PVector(0.0, 0.0);
   PVector l = new PVector(width/2, height/2);
   hero = new Hero(a, v, l);
 }
 
-void drawVector(PVector v, PVector loc, float scayl) {
-  pushMatrix();
-  float arrowsize = 4;
-  // Translate to location to render vector
-  translate(loc.x,loc.y);
-  stroke(0);
-  // Call vector heading function to get direction (note that pointing up is a heading of 0) and rotate
-  rotate(v.heading2D());
-  // Calculate length of vector & scale it to be bigger or smaller if necessary
-  float len = v.mag()*scayl;
-  // Draw three lines to make an arrow (draw pointing up since we've rotate to the proper direction)
-  stroke(255);
-  strokeWeight(1);
-  line(0,0,len,0);
-  line(len,0,len-arrowsize,+arrowsize/2);
-  line(len,0,len-arrowsize,-arrowsize/2);
-  popMatrix();
-}
-
 void draw() {
-  //background(0);
-  noStroke();
-  fill(0,25);
-  rect(0,0,200,200);
-
-  PVector gravity = new PVector(map(noise(noiseFactor,50),0,1,0.4,1.1),map(noise(noiseFactor,200),0,1,-1,2));
-  noiseFactor += 0.005;
-  hero.applyForce(gravity);
-
-  for (int i =25; i< width; i+=50){
-	for(int j=25; j< height; j+=50){
-		PVector center = new PVector(i,j);
-		drawVector(gravity,center,500);
-	}
-  }
-  
+  background(0);
   float c = -0.23;                            // Drag coefficient
   PVector heroVel = hero.getVel();              // Velocity of our thing
   PVector force = PVector.mult(heroVel, c);   // Following the formula
@@ -130,14 +24,12 @@ void draw() {
   
   // Run the Thing object
   if (movingOn== false){
-  hero.makeAppear();
+	hero.makeAppear();
   }
   else {
 	patch.send("pjsquit","bang");
   }
   hero.go();
-  
-  Sauvegarde(hero.loc.x+200,hero.loc.y+400);
   
   // SOUND !!
   float pdtwee1 = map(cos(hero.tweenfactor/4),-1,1,0,1);
@@ -148,26 +40,26 @@ void draw() {
   patch.send("pjstween3",pdtwee3);
   float pdtwee4 = map(cos(hero.tweenfactor/4+PI),-1,1,0,1);
   patch.send("pjstween4",pdtwee4);
-    
+  
   float hposX = map (hero.loc.x,0,width,0,1);
   float hposY = map (hero.loc.y,0,height,0,1);
   float pdvol1 = hposX;
   float pdvol2 = 1-hposX;
   float pdvol3 = hposY;
   float pdvol4 = 1-hposY;
-  
   patch.send("pjsvol1",pdvol1);
   patch.send("pjsvol2",pdvol2);
   patch.send("pjsvol3",pdvol3);
   patch.send("pjsvol4",pdvol4);
-
+  
+  
   if (mousePressed) {
     // Compute difference vector between mouse and object location
     // 3 steps -- (1) Get Mouse Location, (2) Get Difference Vector, (3) Normalize difference vector
     PVector m = new PVector(mouseX, mouseY);
     PVector diff = PVector.sub(m, hero.getLoc());
     diff.normalize();
-    float factor = 0.045;  // Magnitude of Acceleration (not increasing it right now)
+    float factor = 0.1;  // Magnitude of Acceleration (not increasing it right now)
     diff.mult(factor);
     //object accelerates towards mouse
     hero.setAcc(diff);
@@ -175,37 +67,40 @@ void draw() {
   else {
     hero.setAcc(new PVector(0, 0));
   }
+  
   // boundaries
-  if (hero.loc.x>195){
+  if (hero.loc.x<5){
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
 	patch.send("pjsdrums","bang");
   }
-  if (hero.loc.y>195){
+  if (hero.loc.y<5){
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
 	patch.send("pjsdrums","bang");
   }
-  if (hero.loc.x<25){
+  if (hero.loc.x>185){
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	patch.stop();
-	popUp(12);
-	closeWindows(13);
+		patch.stop();
+		popUp(1);
+		//window.close();
+		closeWindows(0);
 	}
   }
-  if (hero.loc.y<25){
+  if (hero.loc.y>185){
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	patch.stop();
-	popUp(7);
-	closeWindows(13);
+		patch.stop();
+		popUp(6);
+		//window.close();
+		closeWindows(0);
 	}
-  }
+  } 
 }
 
 class Hero {
@@ -248,7 +143,7 @@ class Hero {
   //function to display
   void render() {
     strokeWeight(8);
-    stroke(220, alph);
+    stroke(boyColor, alph);
     fill(175,alph);
     tween(); // change appearance while moving
     ellipse(loc.x, loc.y, diameter-cellS, diameter+cellS2);
@@ -289,8 +184,12 @@ class Hero {
     else {
       tweenfactor+= map(sDist, 0,75,0.09,0.25);
     }
+	
+	//patch.send("pdtween",cos(tweenfactor));
+	
     //scale our multiplication factor for our tween effect
     float sMult = map(sDist, 0, 100, 0.09*diameter, .25 * diameter);
+	//println(cos(tweenfactor));
     // fill to global variables  to affect the drawing of our ellipse
     cellS = sMult * cos(tweenfactor);
     cellS2 = sMult * (.5 +(cos(tweenfactor)/2));
@@ -306,9 +205,3 @@ class Hero {
     alph = constrain(alph,0,180);
   }
 }
-
-</script> 
-  
-<canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;" width="222" height="50"></canvas>
-
-</body></html>

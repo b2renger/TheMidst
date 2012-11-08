@@ -1,52 +1,3 @@
-<!DOCTYPE html>
-<html class="vocabbi_document"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
-
- <script src="../js/processing-1.4.1.min.js"></script>
-  <script src="../js/windowScripts.js"></script>
-  <script src="../js/webpd-latest.min.js"></script>
-  <script src="../js/jquery-1.8.2.min.js"></script>
-  
-  
-  <style>body { margin: 0px; overflow:hidden }</style> 
-
- </head>
- 
- <body>
- <script type="application/javascript">
-// some js code to bind our page to pjs by Id 
-			var bound = false;
-			// function to loop if not bound
-			function bindJavascript() {
-			// point to our canvas id
-				var pjs = Processing.getInstanceById('canvas');
-				if(pjs!=null) {
-					// call the bindJavascript function from our sketch
-					pjs.bindJavascript(this);
-					bound = true; 
-					}
-				// retry ...
-				if(!bound) setTimeout(bindJavascript, 250);
-				}
-			// do it !
-			bindJavascript();
-			
-			// a js function to fill our text filed with values received from our sketch 
-			// this will call the function available in ou pjs sketch
-			}
-</script>
- <script id="MySketch" type="application/processing"> 
- // binding processing and js
- /*interface JavaScript {
-    void showXYCoordinates(int x, int y); 
-}*/
-// this one will be called from our webpage see : pjs.bindJavaScript(this)
-void bindJavascript(JavaScript js) {
-    javascript = js; 
-}
-// declare a javacript object that will be used when we want to send values to it
-// check the mouseMoved() function
-JavaScript javascript;
-
 // let's do some processing
 
 Hero hero;
@@ -181,7 +132,7 @@ void draw() {
       displayText ("They are probably happy and have a lot of childrens", timer+600, timer+800,5, height*3/8, 100);
       
       
-      displayText ("this game has been made by Bérenger Recoules", timer+1000, timer+1200, 15, height*2/8, 100);
+      displayText ("this game has been made by BÃ©renger Recoules", timer+1000, timer+1200, 15, height*2/8, 100);
       displayText ("drop me an email if you liked it :", timer+1200, timer+1400,width/8, height*2/8, 100);
       displayText ("berenger.recoules@gmail.com", timer+1200, timer+1400,width/8, height*3/8, 100);
 
@@ -198,8 +149,8 @@ void draw() {
       displayText ("Miller Puckette - creator of Pure Data", timer+2100, timer+2300, 10, height*4/8, 100);
       displayText ("John Resig - the man behind processing.js", timer+2300, timer+2500, 10, height*4/8, 100);
       displayText ("Chris McCormick - intiator of Webpd", timer+2500, timer+2700, 10, height*4/8, 100);
-      displayText ("Sébastien Piquemal - developper of Webpd", timer+2700, timer+2900, 10, height*4/8, 100);
-      displayText ("and Sébastien again for his precious advices", timer+2900, timer+3100, 10, height*4/8, 100);
+      displayText ("SÃ©bastien Piquemal - developper of Webpd", timer+2700, timer+2900, 10, height*4/8, 100);
+      displayText ("and SÃ©bastien again for his precious advices", timer+2900, timer+3100, 10, height*4/8, 100);
       
 
 
@@ -596,12 +547,3 @@ class Particle {
 }
 
   
-</script>
-<canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;" ></canvas>
-
- 
- 
- 
- </body>
- 
- </html>

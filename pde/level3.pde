@@ -1,61 +1,6 @@
-<!DOCTYPE html>
-<html class="vocabbi_document">
-<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
-  <script src="../js/processing-1.4.1.min.js"></script>
-  <script src="../js/windowScripts.js"></script>
-  <script src="../js/webpd-latest.min.js"></script>
-  <script src="../js/jquery-1.8.2.min.js"></script>
-  
- </head>
- <body marginheight="0" marginwidth="0" > 
-<script type="application/javascript">
-// some js code to bind our page to pjs by Id 
-			
-			var bound = false;
-			// function to loop if not bound
-			function bindJavascript() {
-			// point to our canvas id
-				var pjs = Processing.getInstanceById('canvas');
-				if(pjs!=null) {
-					// call the bindJavascript function from our sketch
-					pjs.bindJavascript(this);
-					bound = true; 
-					}
-				// retry ...
-				if(!bound) {
-				setTimeout(bindJavascript, 250);
-				}
-			// do it !
-			bindJavascript();
-			
-			// a js function to fill our text filed with values received from our sketch 
-			// this will call the function available in ou pjs sketch
-				
-
-
-			}
-			
-
-</script>
-
- <script id="MySketch" type="application/processing"> 
- // binding processing and js
- interface JavaScript {
-    //void popUp(int x); 
-}
-// this one will be called from our webpage see : pjs.bindJavaScript(this)
-void bindJavascript(JavaScript js) {
-    javascript = js; 
-}
-// declare a javacript object that will be used when we want to send values to it
-// check the mouseMoved() function
-JavaScript javascript;
-
 // let's do some processing
 Hero hero;
 Hero bumper;
-
-color boyColor = color(180);
 
 boolean movingOn = false;
 
@@ -67,18 +12,23 @@ void setup() {
   PVector a = new PVector(0.0, 0.0);
   PVector v = new PVector(0.0, 0.0);
   PVector l = new PVector(width/2, height/2);
-  hero = new Hero(a, v, l,20,20,boyColor);
+  hero = new Hero(a, v, l,20,20,0);
   
 PVector amh = new PVector(-10.0, 0.0);
   PVector vmh = new PVector(-100.0, 0.0);
-  PVector lmh = new PVector(300,100);
+  PVector lmh = new PVector(100,50);
 	
-	bumper = new Hero(amh,vmh,lmh,140,1500,color(180));
+	agent = new Hero(amh,vmh,lmh,50,1500,PI);
+	agent2 = new Hero(amh,vmh,lmh,50,1500,TWO_PI);
+	agent3 = new Hero(amh,vmh,lmh,50,1500,PI/2);
+	agent4 = new Hero(amh,vmh,lmh,50,1500,3*PI/2);
     
 }
 
 void draw() {
-  background(0);
+noStroke();
+  fill(0,20);
+  rect(0,0,width,height);
   
   float c = -0.23;                            // Drag coefficient
   PVector heroVel = hero.getVel();              // Velocity of our thing
@@ -89,17 +39,24 @@ void draw() {
   hero.makeAppear();
   }
   hero.go();
+  Sauvegarde(hero.loc.x+600,hero.loc.y);
+	agent.makeAppear();
+	agent.goAgent();
+	agent.transport(hero);
+	
+	agent2.makeAppear();
+	agent2.goAgent();
+	agent2.transport(hero);
+	
+	agent3.makeAppear();
+	agent3.goAgent();
+	agent3.transport(hero);
+	
+	agent4.makeAppear();
+	agent4.goAgent();
+	agent4.transport(hero);
   
   
-  
-	bumper.makeAppear();
-	bumper.goBumper();
-
-  
-  hero.collideEqualMass(bumper);
-  
-  bumper.loc.x= constrain(bumper.loc.x,249,251);
-  bumper.loc.y= constrain(bumper.loc.y,99,101);
   
   
   
@@ -120,24 +77,15 @@ void draw() {
   }
   
   // boundaries
-  if (hero.loc.x<25 && hero.loc.y>75 && hero.loc.y<125){
+  if (hero.loc.x<25){
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	
-	//closeWindows(1);
-	popUp(0);
-	window.close();
-	}
-  }
-  if (hero.loc.x<5 ){
-	if(hero.loc.y<75 || hero.loc.y>125){
-  PVector newV = hero.getVel();
-    newV.x*=-1;
-    hero.setVel(newV);
-	
+	popUp(2);
+	closeWindows(3);
 	}
   
+ 
   }
   
   if (hero.loc.y<5){
@@ -149,16 +97,18 @@ void draw() {
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-
-	//closeWindows(1);
-		popUp(2);
-		window.close();
+	popUp(4);
+	closeWindows(3);
 	}
   }
-  if (hero.loc.y>195){
-	PVector newV = hero.getVel();
-    newV.y*=-1;
-    hero.setVel(newV);
+  if (hero.loc.y>190){
+  movingOn = true;
+	hero.makeDisappear();
+	if (hero.alph<10){
+	popUp(9);
+	closeWindows(3);
+	}
+	
   }
   
   
@@ -180,17 +130,17 @@ class Hero {
   float sDist;
   float tweenfactor=0;
   float cellS, cellS2;
-  
-  color heroColor;
   // to makeAppear() and makeDisAppear()
   float alph = 0;
   //colliding
    boolean colliding = false;
    float noiseFactor;
+   // circular motion
+   float angle;
 
 
   //The Constructor (called when the object is first created)
-  Hero(PVector a, PVector v, PVector l, float diam, float mass0, color color0) {
+  Hero(PVector a, PVector v, PVector l, float diam, float mass0,float angle0) {
     acc = a;
     vel = v;
     loc = l;
@@ -199,7 +149,7 @@ class Hero {
 	diameter = diam;
 	mass=mass0;
 	noiseFactor= random(500);
-	heroColor = color (color0);
+	angle=angle0;
   }
   //main function to operate object
   void go() {
@@ -208,10 +158,11 @@ class Hero {
     render();
   }
   
-  void goBumper(){
-	update();
-	diameter =  constrain(map(noise(noiseFactor,10,20),0,1,-2,2.1)+diameter,160,190);
-	noiseFactor+=0.04;
+  void goAgent(){
+	//update();
+	angle+=0.025;
+	loc.x = cos(angle)*80+width/2;
+	loc.y = sin(angle)*80+height/2;
 	//cellS2 = random(-10,10);
 	render();
   
@@ -230,7 +181,7 @@ class Hero {
   //function to display
   void render() {
     strokeWeight(8);
-    stroke(heroColor, alph);
+    stroke(220, alph);
     fill(175,alph);
     ellipse(loc.x, loc.y, diameter-cellS, diameter+cellS2);
   }
@@ -289,7 +240,7 @@ class Hero {
   }
   
   // collision
-  void collideEqualMass(Hero other) {
+  void transport (Hero other) {
     float d = PVector.dist(loc,other.loc);
     float sumDiam = diameter/2 + other.diameter/2;
     // Are they colliding?
@@ -297,25 +248,26 @@ class Hero {
       // Yes, make new velocities!
       colliding = true;
 	  
-	  
-      // Direction of one object another
-      PVector n = PVector.sub(other.loc,loc);
-      n.normalize();
-
-      // Difference of velocities so that we think of one object as stationary
-      PVector u = PVector.sub(vel,other.vel);
-
-      // Separate out components -- one in direction of normal
-      PVector un = componentVector(u,n);
-      // Other component
-      u.sub(un);
-      // These are the new velocities plus the velocity of the object we consider as stastionary
-      vel = PVector.add(u,other.vel);
-      other.vel = PVector.add(un,other.vel);
     } 
     else if (d > sumDiam) {
       colliding = false;
     }
+	if (colliding){
+	
+	makeDisappear();
+	int goTo = (int)random(17);
+		closeWindows(3);
+		popUp(3);
+	colliding=false;
+	
+	
+		
+		
+		
+	  
+	  
+	  }
+	
   }
 }
 PVector componentVector (PVector vector, PVector directionVector) {
@@ -327,13 +279,3 @@ PVector componentVector (PVector vector, PVector directionVector) {
   return directionVector;
 }
 
-
-</script> 
-  
-  
-<canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;" ></canvas>
-
-
-
-
-</body></html>

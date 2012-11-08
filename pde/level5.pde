@@ -1,61 +1,6 @@
-<!DOCTYPE html>
-<html class="vocabbi_document"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
-  <script src="../js/processing-1.4.1.min.js"></script>
-  <script src="../js/windowScripts.js"></script>
-  <script src="../js/webpd-latest.min.js"></script>
-  <script src="../js/jquery-1.8.2.min.js"></script>
-  <style>body { margin: 0px; overflow:hidden }</style> 
-
- </head><body marginheight="0" marginwidth="0" onunload="return closeWindows();"> 
-<script type="application/javascript">
-// some js code to bind our page to pjs by Id 
-
-			
-			
-			var bound = false;
-			// function to loop if not bound
-			function bindJavascript() {
-			// point to our canvas id
-				var pjs = Processing.getInstanceById('canvas');
-				if(pjs!=null) {
-					// call the bindJavascript function from our sketch
-					pjs.bindJavascript(this);
-					bound = true; 
-					}
-				// retry ...
-				if(!bound) setTimeout(bindJavascript, 250);
-				}
-			// do it !
-			bindJavascript();
-			
-			// a js function to fill our text filed with values received from our sketch 
-			// this will call the function available in ou pjs sketch
-			
-
-</script>
-<script type="text/javascript">
-	function Sauvegarde(valeur1 , valeur2) {
-		window.localStorage['heroPosX']=valeur1;
-		window.localStorage['heroPosY']=valeur2;
-		
-	}
-</script>
- <script id="MySketch" type="application/processing"> 
- // binding processing and js
- /*interface JavaScript {
-    void showXYCoordinates(int x, int y); 
-}*/
-// this one will be called from our webpage see : pjs.bindJavaScript(this)
-void bindJavascript(JavaScript js) {
-    javascript = js; 
-}
-// declare a javacript object that will be used when we want to send values to it
-// check the mouseMoved() function
-JavaScript javascript;
-
 // let's do some processing
 Hero hero;
-Hero bumper;
+ArrayList miniheroes;
 
 boolean movingOn = false;
 
@@ -67,23 +12,24 @@ void setup() {
   PVector a = new PVector(0.0, 0.0);
   PVector v = new PVector(0.0, 0.0);
   PVector l = new PVector(width/2, height/2);
-  hero = new Hero(a, v, l,20,20,0);
+  hero = new Hero(a, v, l,20);
   
-PVector amh = new PVector(-10.0, 0.0);
-  PVector vmh = new PVector(-100.0, 0.0);
-  PVector lmh = new PVector(100,50);
-	
-	agent = new Hero(amh,vmh,lmh,50,1500,PI);
-	agent2 = new Hero(amh,vmh,lmh,50,1500,TWO_PI);
-	agent3 = new Hero(amh,vmh,lmh,50,1500,PI/2);
-	agent4 = new Hero(amh,vmh,lmh,50,1500,3*PI/2);
-    
+  miniheroes = new ArrayList();
+  for( int i = 0 ; i <15 ; i++){
+  
+  PVector amh = new PVector(0.0, 0.0);
+  PVector vmh = new PVector(0.0, 0.0);
+  PVector lmh = new PVector(random(10,width-10),random(10,height-10));
+  
+  miniheroes.add(new Hero(amh,vmh,lmh,8));
+  
+  }
+  
+  
 }
 
 void draw() {
-noStroke();
-  fill(0,20);
-  rect(0,0,width,height);
+  background(0);
   
   float c = -0.23;                            // Drag coefficient
   PVector heroVel = hero.getVel();              // Velocity of our thing
@@ -94,27 +40,55 @@ noStroke();
   hero.makeAppear();
   }
   hero.go();
-  Sauvegarde(hero.loc.x+600,hero.loc.y);
-	agent.makeAppear();
-	agent.goAgent();
-	agent.transport(hero);
-	
-	agent2.makeAppear();
-	agent2.goAgent();
-	agent2.transport(hero);
-	
-	agent3.makeAppear();
-	agent3.goAgent();
-	agent3.transport(hero);
-	
-	agent4.makeAppear();
-	agent4.goAgent();
-	agent4.transport(hero);
   
   
   
   
+  for (int i=0; i<miniheroes.size() ;i++){
+  Hero mh = (Hero) miniheroes.get(i);
+  float c2 = -0.03;                            // Drag coefficient
+  PVector mhVel = mh.getVel();              // Velocity of our thing
+  PVector force2 = PVector.mult(mhVel, c2);   // Following the formula
+  mh.applyForce(force2);      
   
+  mh.makeAppear();
+  mh.go();
+  // go towards ou hero
+  PVector heroPos = new PVector(hero.loc.x, hero.loc.y);
+    PVector diff2 = PVector.sub(heroPos, mh.getLoc());
+    diff2.normalize();
+    float factor = 0.05;  // Magnitude of Acceleration (not increasing it right now)
+    diff2.mult(factor);
+    //object accelerates towards mouse
+    mh.setAcc(diff2);
+
+  // borders
+  if (mh.loc.x<5){
+    PVector newV = mh.getVel();
+    newV.x*=-1;
+    mh.setVel(newV);
+  }
+  if (mh.loc.y<5){
+   PVector newV = mh.getVel();
+    newV.y*=-1;
+    mh.setVel(newV);
+    
+  }
+  if (mh.loc.x>195){
+   PVector newV = mh.getVel();
+    newV.x*=-1;
+    mh.setVel(newV);
+  
+  }
+  if (mh.loc.y>195){
+   PVector newV = mh.getVel();
+    newV.y*=-1;
+    mh.setVel(newV);
+  }
+  
+  hero.collideEqualMass(mh);
+  
+  }
 
   if (mousePressed) {
     // Compute difference vector between mouse and object location
@@ -130,41 +104,35 @@ noStroke();
   else {
     hero.setAcc(new PVector(0, 0));
   }
-  
   // boundaries
-  if (hero.loc.x<25){
-	movingOn = true;
+  if (hero.loc.x<15){
+    movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	popUp(2);
-	closeWindows(3);
+	popUp(4);
+	closeWindows(5);
 	}
   
- 
   }
-  
   if (hero.loc.y<5){
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
   }
-  if (hero.loc.x>190){
-	movingOn = true;
-	hero.makeDisappear();
-	if (hero.alph<10){
-	popUp(4);
-	closeWindows(3);
-	}
+  if (hero.loc.x>195){
+  PVector newV = hero.getVel();
+    newV.x*=-1;
+    hero.setVel(newV);
   }
-  if (hero.loc.y>190){
+  if (hero.loc.y>185){
   movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	popUp(9);
-	closeWindows(3);
+	popUp(11);
+	closeWindows(5);
 	}
-	
   }
+  
   
   
   
@@ -187,42 +155,23 @@ class Hero {
   float cellS, cellS2;
   // to makeAppear() and makeDisAppear()
   float alph = 0;
-  //colliding
+  //collinding
    boolean colliding = false;
-   float noiseFactor;
-   // circular motion
-   float angle;
-
 
   //The Constructor (called when the object is first created)
-  Hero(PVector a, PVector v, PVector l, float diam, float mass0,float angle0) {
+  Hero(PVector a, PVector v, PVector l, float diam) {
     acc = a;
     vel = v;
     loc = l;
     maxvel = 4;
     mass = 20;
-	diameter = diam;
-	mass=mass0;
-	noiseFactor= random(500);
-	angle=angle0;
+  diameter = diam;
   }
   //main function to operate object
   void go() {
     update();  
-	 tween(); // change appearance while moving
     render();
   }
-  
-  void goAgent(){
-	//update();
-	angle+=0.025;
-	loc.x = cos(angle)*80+width/2;
-	loc.y = sin(angle)*80+height/2;
-	//cellS2 = random(-10,10);
-	render();
-  
-  }
-  
   //function to update location
   void update() {
     vel.add(acc);
@@ -238,9 +187,9 @@ class Hero {
     strokeWeight(8);
     stroke(220, alph);
     fill(175,alph);
+    tween(); // change appearance while moving
     ellipse(loc.x, loc.y, diameter-cellS, diameter+cellS2);
   }
- 
   // transform movement (used in draw)
   void applyForce(PVector force) {
     force.div(mass);   // Newton's second law
@@ -295,34 +244,31 @@ class Hero {
   }
   
   // collision
-  void transport (Hero other) {
+  void collideEqualMass(Hero other) {
     float d = PVector.dist(loc,other.loc);
-    float sumDiam = diameter/2 + other.diameter/2;
+    float sumDiam = diameter + other.diameter;
     // Are they colliding?
     if (!colliding && d < sumDiam) {
       // Yes, make new velocities!
       colliding = true;
-	  
+      // Direction of one object another
+      PVector n = PVector.sub(other.loc,loc);
+      n.normalize();
+
+      // Difference of velocities so that we think of one object as stationary
+      PVector u = PVector.sub(vel,other.vel);
+
+      // Separate out components -- one in direction of normal
+      PVector un = componentVector(u,n);
+      // Other component
+      u.sub(un);
+      // These are the new velocities plus the velocity of the object we consider as stastionary
+      vel = PVector.add(u,other.vel);
+      other.vel = PVector.add(un,other.vel);
     } 
     else if (d > sumDiam) {
       colliding = false;
     }
-	if (colliding){
-	
-	makeDisappear();
-	int goTo = (int)random(17);
-		closeWindows(3);
-		popUp(3);
-	colliding=false;
-	
-	
-		
-		
-		
-	  
-	  
-	  }
-	
   }
 }
 PVector componentVector (PVector vector, PVector directionVector) {
@@ -333,27 +279,3 @@ PVector componentVector (PVector vector, PVector directionVector) {
   directionVector.mult(vector.dot(directionVector));
   return directionVector;
 }
-
-
-
-
- 
- 
- 
- 
-
-
-
-  </script> 
-  
-  
-<canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;" width="222" height="50"></canvas>
-
-		
-			
-
-
-
-
-
-</body></html>
