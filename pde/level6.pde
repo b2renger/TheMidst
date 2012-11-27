@@ -38,7 +38,7 @@ void draw() {
 	fill(0,25);
 	rect(0,0,200,200);
 	
-	PVector gravity = new PVector(map(noise(noiseFactor,200),0,1,-2,2),map(noise(noiseFactor,50),0,1,0.3,1.1));
+	PVector gravity = new PVector(map(noise(noiseFactor,200),0,1,-1,2),map(noise(noiseFactor,50),0,1,0.3,1.1));
 	noiseFactor += 0.005;
 	hero.applyForce(gravity);
 	
@@ -64,7 +64,7 @@ void draw() {
 	}
 	hero.go();
   
-	Sauvegarde(hero.loc.x,hero.loc.y+200);
+	
   
 	// SOUND !!
 	float pdtwee1 = map(cos(hero.tweenfactor/4),-1,1,0,1);

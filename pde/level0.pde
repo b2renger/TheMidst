@@ -87,8 +87,7 @@ void draw() {
 	if (hero.alph<10){
 		patch.stop();
 		popUp(1);
-		//window.close();
-		closeWindows(0);
+		
 	}
   }
   if (hero.loc.y>185){
@@ -97,8 +96,7 @@ void draw() {
 	if (hero.alph<10){
 		patch.stop();
 		popUp(6);
-		//window.close();
-		closeWindows(0);
+		
 	}
   } 
 }

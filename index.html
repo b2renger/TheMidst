@@ -14,8 +14,11 @@
             margin: 0px;
             overflow: hidden;
             background-color: black;
+			font-color : white;
         }
     </style>
+	
+	
 </head>
  
 <body>
@@ -36,24 +39,24 @@
 
             var winVars = [];
             // X, Y, WIDTH, HEIGHT
-            winVars[0] = [0,  0,215, 264];  // level1	 
-            winVars[1] = [215, 0, 215, 264];	 // level2
-            winVars[2] = [430, 0, 215, 264];  // level3
-            winVars[3] = [645, 0, 215, 264];  
-            winVars[4] = [860,  0, 215, 264];  
-            winVars[5] = [1075, 0, 215, 264];  
-            winVars[6] = [0, 264, 215, 264];  
-            winVars[7] = [215,  264, 215, 264]; 
-            winVars[8] = [430, 264, 215, 264];  
-            winVars[9] = [645, 264, 215, 264];  
-            winVars[10] = [860,  264, 215, 264];   
-            winVars[11] = [1075, 264, 215, 264];	 
-            winVars[12] = [0, 528, 215, 264];  
-            winVars[13] = [215, 528, 215, 264];  
-            winVars[14] = [430,  528, 215, 264];  
-            winVars[15] = [645, 528, 215, 264];  
-            winVars[16] = [860, 528, 215, 264];  
-            winVars[17] = [1075,  528, 215, 264]; 
+            winVars[0] = [1,  1,200, 200];  // level1	 
+            winVars[1] = [215, 0, 200, 200];	 // level2
+            winVars[2] = [430, 0, 200, 200];  // level3
+            winVars[3] = [645, 0, 200, 200];  
+            winVars[4] = [860,  0, 200, 200];  
+            winVars[5] = [1075, 0, 200, 200];  
+            winVars[6] = [0, 264, 200, 200];  
+            winVars[7] = [215,  264, 200, 200]; 
+            winVars[8] = [430, 264, 200, 200];  
+            winVars[9] = [645, 264, 200, 200];  
+            winVars[10] = [860,  264, 200, 200];   
+            winVars[11] = [1075, 264, 200, 200];	 
+            winVars[12] = [0, 528, 200, 200];  
+            winVars[13] = [215, 528, 200, 200];  
+            winVars[14] = [430,  528, 200, 200];  
+            winVars[15] = [645, 528, 200, 200];  
+            winVars[16] = [860, 528, 200, 200];  
+            winVars[17] = [1075,  528, 200, 200]; 
             winVars[18] = [300, 0, 700, 700];  // finishing animation
              
             // This function pops-up a new window containing assets of level `winNum`.
@@ -87,17 +90,18 @@
 	            // -------------------------------------
 	            // This is how you receive a message from a patch, and send it to processing
 	            //
-	            patch.receive('thunder', function() {
-	                sketch.startLightning();
+	            //patch.receive('thunder', function() {
+	            //    sketch.startLightning();
+				patch.play();
 	            });
-                patch.play();
+                
             });
-        });
+       
     </script>
 
     <canvas id="canvas" style="overflow:hidden;width:windowWidth;height:windowHeight;padding-left:0px;padding-top:0px;"></canvas>
     <input type="button" onClick="popUp(0)" value="Start">
-    <div id="text"><font color="#FFFFFF" face ="Arial"></font></div>
+    <p id="text" style="font-family:verdana;color:white;"></p>
 
 </body>
 </html>

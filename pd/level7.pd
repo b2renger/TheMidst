@@ -135,10 +135,10 @@
 #X obj 675 -224 moses 0;
 #X obj 744 -223 moses 0;
 #X obj 813 -223 moses 50;
-#X msg -24 -105 68;
-#X msg 124 -104 72;
-#X msg 270 -104 76;
-#X msg 414 -105 78;
+#X msg -24 -105 66;
+#X msg 124 -104 70;
+#X msg 270 -104 74;
+#X msg 414 -105 76;
 #X connect 0 0 10 0;
 #X connect 0 0 25 0;
 #X connect 1 0 15 0;

@@ -1,4 +1,4 @@
-/* @pjs font = "js/peachsundress.ttf,"js/Moonstar.ttf"; */
+/* @pjs font = "fonts/peach-sundress.ttf,"fonts/ReenieBeanie.ttf"; */
 
  // binding processing and js
 interface JavaScript {
@@ -30,6 +30,7 @@ PixelCloud whiteMeanies; // they are really mean ...
 int timer=300000000; // we just nee a big number here, as it will be re-assigner at first mousePress to make an anchor in time and pursue the scenario from here
 int timer2 = 300000000;
 int timer3 = 300000000;
+boolean step0 = true, step1 = false, step2 = false,step3 = false;
 float alphaV=0;
 int mouseNumber = 0;
 
@@ -53,24 +54,27 @@ void setup() {
   heroBoy = new Hero(a, v, l1, boyColor);
   heroGirl = new Hero(a, v, l2, girlColor);
 
-  newTree();
+  
+  trunk = new Branch(1, 0, width/2, height/2);
   whiteMeanies = new PixelCloud();
 
-  title = createFont("peachsundress",48);
-  font = createFont("Moonstar",20);
+  title = createFont("fonts/peach-sundress.ttf",72);
+  font = createFont("fonts/ReenieBeanie.ttf",28);
 }
 
-void newTree() {
-  trunk = new Branch(1, 0, width/2, height/2);
-}
+
 
 void draw() {
   showText(" ");
 
   background(0);
-  fill(180);
-  stroke(180);
+  fill(255);
+  stroke(255);
   rect(0, height-5, width, 5);
+  
+  for (int i =0 ; i<3;i++){
+  point (random(width),random(height));
+  }
 
   heroBoy.makeAppear();
   heroGirl.makeAppear();
@@ -80,18 +84,22 @@ void draw() {
   textFont(title);
   text("The Midst ...", width*5/8, 100);
 
-  trunk.updateMe(width/4, height);
+  trunk.updateMe(width/5, height);
   trunk.drawMe();
   noiseFactor += 0.0065; 
+  if (!step3){
+  whiteMeanies.display(mouseX,mouseY);
+  }
 
   textFont(font);
+  
 
   // let's start a long timed sequence 
-
+	if (step0){
   displayText ("- What a lovely night to hang out ...", 100, 350, heroBoy.loc.x, 430, "BOY", 125);
 
   // inline : yeah lovely appart from that creepy tree ...
-  if (frameCount >100 && frameCount <600){
+  if (frameCount >250 && frameCount <550){
   showText("Yeah ! lovely ... appart from that creepy leafless tree...");
   } else {
 	showText(" ");
@@ -110,11 +118,16 @@ void draw() {
     timer = frameCount;
     whiteMeanies.number+=10; 
     mouseNumber+=1;
+	step1 = true;
+	step0 = false;
   }
-
+  }
+	
+	if (step1){
+	
   displayText ("- Look ! ... it is growing !", timer, timer+200, heroBoy.loc.x, 430, "BOY", 100); 
   // inline : oh ! snap !
-  if (frameCount >timer +100 && frameCount <timer +400){
+  if (frameCount >timer +10 && frameCount <timer +400){
 	showText("oh ! snap !");
   }
   
@@ -123,27 +136,33 @@ void draw() {
   displayText ("- No ! I would love to see them from closer", timer+400, timer+600, heroGirl.loc.x, 460, "GIRL", 100); 
 
   // inline (after some time) : did you try pressing the mouse again ? (not kidding!)
-  if (frameCount >timer +450 && frameCount <timer +1000){
+  if (frameCount >timer +850 && frameCount <timer +1000){
 	showText("did you try pressing the mouse again ? (not kidding!)");
   }
+  
 
   if (mousePressed && frameCount>timer+600 ) {
     mouseNumber +=1;
     if (mouseNumber >4) {
+		
       timer2 = frameCount;
-      whiteMeanies.number+=20;
+      whiteMeanies.number+=40;
+	  step2= true;
+		step1=false;
     }
   }
+  }
+  if(step2){
 
   displayText ("- Ah !! it's still growing ...", timer2, timer2+200, heroBoy.loc.x, 430, "BOY", 100); 
   // inline : Oh snap! snap ! Why did you presse the mouse ?!
-  if (frameCount >timer2 && frameCount <timer +450){
-	showText("Oh snap! snap ! Why did you presse the mouse ?!");
+  if (frameCount >timer2 && frameCount <timer2 +450){
+	showText("Oh snap! snap ! Why did you press the mouse ?!");
   }
   
   displayText ("- We should REALLY get going... Come on !", timer2+200, timer2+400, heroBoy.loc.x, 430, "BOY", 100); 
 
-  if (frameCount>timer2+300) {
+  if (frameCount>timer2+250) {
     float targetX = 670;
     float targetY = height-30;
 
@@ -167,21 +186,27 @@ void draw() {
 
   displayText ("- wohoo! it's so nice !", timer2+600, timer2+750, heroGirl.loc.x, heroGirl.loc.y-150, "GIRL", 75);
 
-  displayText ("- be carefull honey !", timer2+750, timer2+950, heroBoy.loc.x, 460, "BOY", 100);
+  displayText ("- be carefull honey !", timer2+750, timer2+900, heroBoy.loc.x, 460, "BOY", 100);
+  
 
   // inline (after some time) : you should come closer to our heroGirl ... I believe she wants to see the stars better....
-  if (frameCount >timer2+1000 && frameCount <timer +1500){
+  if (frameCount >timer2+1000 && frameCount <timer2 +1500){
 	showText("you should come closer to our heroGirl ... I believe she wants to see the stars better...");
   }
+  }
+  
 
   if (mouseX < heroGirl.loc.x + heroGirl.diameter && mouseX> heroGirl.loc.x - heroGirl.diameter
     && mouseY < heroGirl.loc.y + heroGirl.diameter && mouseY> heroGirl.loc.y - heroGirl.diameter
     && frameCount > timer2+950) {
     timer3 = frameCount;
     timer2 = 999999999;
+	step3=true;
+	step2=false;
   }
+  if(step3){
 
-  if (frameCount>timer3 && frameCount<timer3+500) {
+  if (frameCount>timer3 && frameCount<timer3+150) {
     float targetX =mouseX ;
     float targetY = mouseY;
     float dX = targetX - heroGirl.loc.x;
@@ -191,14 +216,14 @@ void draw() {
   }
 
   displayText ("- it's attracting me ! I can't escape !", timer3, timer3+200, heroGirl.loc.x, heroGirl.loc.y-150, "GIRL", 100);
-  displayText ("- Let go of me stupid cloud !", timer3+600, timer3+800, heroGirl.loc.x, heroGirl.loc.y, "GIRL", 100);
+  displayText ("- Let go of me stupid cloud !", timer3+250, timer3+450, heroGirl.loc.x, heroGirl.loc.y, "GIRL", 100);
 
   // inline html : " yeah ... you are totally responsible for that ! Shame on you!"
-  if (frameCount >timer2+150 && frameCount <timer +800){
+  if (frameCount >timer3+50 && frameCount <timer3 +500){
 	showText("yep ! ... you are totally responsible for that ! Shame on you!");
   }
 
-  if (frameCount> timer3 +300) {
+  if (frameCount> timer3 +200) {
     float targetX =-150 ;
     float targetY = -10;
     float dX = targetX - heroBoy.loc.x;
@@ -212,10 +237,6 @@ void draw() {
   }
 
   displayText ("- oh no ! I had a bad feeling about those", timer3+700, timer3+900, heroBoy.loc.x, 430, "BOY", 100);
-  
-  if (frameCount>timer3 + 750){
-	patch.stop();
-  }
   displayText ("- well ... so long !!! what should I do next ?", timer3+1100, timer3+1300, heroBoy.loc.x, 430, "BOY", 100);
 
   // inline : WTF ?? you don't even go after her ?
@@ -226,12 +247,18 @@ void draw() {
   displayText ("- I'm sure it's going to be hard with traps and everything...", timer3+1500, timer3+1700, heroBoy.loc.x, 430, "BOY", 100);
   displayText ("- plus she was a little boring ...", timer3+1700, timer3+1900, heroBoy.loc.x, 460, "BOY", 100);
   displayText ("- actually I'd rather stay here, and enjoy the mood...", timer3+1900, timer3+2100, heroBoy.loc.x, 460, "BOY", 100);
-
+}
   // inline : what a helpless coward and lazy hero ... if you still want to play, you should probably press start as you can't count on him...
   if (frameCount >timer3+2100 && frameCount <timer3 +5000){
 	showText("what a helpless coward and lazy hero ... if you still want to play, you should probably press start as you can't count on him...");
-	noLoop();
+	patch.send("pdquit","bang");
   } 
+  
+  if (frameCount>timer3 + 5000){
+	patch.stop();
+	noLoop();
+  }
+  
 }
 
 void displayText(String myText, int tStart, int tStop, float expos, float ypos, String type, int fadeDur) {

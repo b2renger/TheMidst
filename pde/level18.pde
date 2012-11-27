@@ -1,3 +1,5 @@
+/* @pjs font = "fonts/peach-sundress.ttf,"fonts/ReenieBeanie.ttf"; */
+
 // let's do some processing
 
 Hero hero;
@@ -39,7 +41,8 @@ void setup() {
   // 3. ending surprise
   ps = new ParticleSystem(100, new PVector(width/2, height/2, 0));
 
-  font = loadFont("ShowcardGothic-Reg-48.vlw");
+  font = createFont("fonts/ReenieBeanie.ttf",38);
+  textFont(font);
 }
 
 

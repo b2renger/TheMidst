@@ -38,8 +38,11 @@ noStroke();
   if (movingOn== false){
   hero.makeAppear();
   }
+  else {
+	patch.send("pjsquit","bang");
+  }
   hero.go();
-  Sauvegarde(hero.loc.x+600,hero.loc.y);
+  
 	agent.makeAppear();
 	agent.goAgent();
 	agent.transport(hero);
@@ -55,6 +58,27 @@ noStroke();
 	agent4.makeAppear();
 	agent4.goAgent();
 	agent4.transport(hero);
+	
+	// SOUND !!
+  float pdtwee1 = map(cos(hero.tweenfactor/4),-1,1,0,1);
+  patch.send("pjstween1",pdtwee1);
+  float pdtwee2 = map(cos(hero.tweenfactor/4 + PI*3/2),-1,1,0,1);
+  patch.send("pjstween2",pdtwee2);
+  float pdtwee3 = map(cos(hero.tweenfactor/4+ PI/2),-1,1,0,1);
+  patch.send("pjstween3",pdtwee3);
+  float pdtwee4 = map(cos(hero.tweenfactor/4+PI),-1,1,0,1);
+  patch.send("pjstween4",pdtwee4);
+  
+  float hposX = map (hero.loc.x,0,width,0,1);
+  float hposY = map (hero.loc.y,0,height,0,1);
+  float pdvol1 = hposX;
+  float pdvol2 = 1-hposX;
+  float pdvol3 = hposY;
+  float pdvol4 = 1-hposY;
+  patch.send("pjsvol1",pdvol1);
+  patch.send("pjsvol2",pdvol2);
+  patch.send("pjsvol3",pdvol3);
+  patch.send("pjsvol4",pdvol4);
   
   
   
@@ -82,7 +106,7 @@ noStroke();
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(2);
-	closeWindows(3);
+	
 	}
   
  
@@ -98,7 +122,7 @@ noStroke();
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(4);
-	closeWindows(3);
+	
 	}
   }
   if (hero.loc.y>190){
@@ -106,7 +130,7 @@ noStroke();
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(9);
-	closeWindows(3);
+	
 	}
 	
   }

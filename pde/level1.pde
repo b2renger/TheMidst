@@ -35,6 +35,9 @@ void draw() {
   if (movingOn== false){
   hero.makeAppear();
   }
+  else {
+	patch.send("pjsquit","bang");
+  }
   hero.go();
   
   
@@ -44,9 +47,33 @@ void draw() {
 
   
   hero.collideEqualMass(bumper);
+  if (bumper.colliding){
+  patch.send("pjsdrums","bang");
+  }
   
   bumper.loc.x= constrain(bumper.loc.x,249,251);
   bumper.loc.y= constrain(bumper.loc.y,99,101);
+  
+  // SOUND !!
+  float pdtwee1 = map(cos(hero.tweenfactor/4),-1,1,0,1);
+  patch.send("pjstween1",pdtwee1);
+  float pdtwee2 = map(cos(hero.tweenfactor/4 + PI*3/2),-1,1,0,1);
+  patch.send("pjstween2",pdtwee2);
+  float pdtwee3 = map(cos(hero.tweenfactor/4+ PI/2),-1,1,0,1);
+  patch.send("pjstween3",pdtwee3);
+  float pdtwee4 = map(cos(hero.tweenfactor/4+PI),-1,1,0,1);
+  patch.send("pjstween4",pdtwee4);
+  
+  float hposX = map (hero.loc.x,0,width,0,1);
+  float hposY = map (hero.loc.y,0,height,0,1);
+  float pdvol1 = hposX;
+  float pdvol2 = 1-hposX;
+  float pdvol3 = hposY;
+  float pdvol4 = 1-hposY;
+  patch.send("pjsvol1",pdvol1);
+  patch.send("pjsvol2",pdvol2);
+  patch.send("pjsvol3",pdvol3);
+  patch.send("pjsvol4",pdvol4);
   
   
   
@@ -71,10 +98,7 @@ void draw() {
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-	
-	//closeWindows(1);
 	popUp(0);
-	window.close();
 	}
   }
   if (hero.loc.x<5 ){
@@ -82,6 +106,7 @@ void draw() {
   PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjsdrums","bang");
 	
 	}
   
@@ -91,21 +116,20 @@ void draw() {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjsdrums","bang");
   }
   if (hero.loc.x>190){
 	movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
-
-	//closeWindows(1);
 		popUp(2);
-		window.close();
 	}
   }
   if (hero.loc.y>195){
 	PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjsdrums","bang");
   }
   
   
@@ -243,7 +267,8 @@ class Hero {
     if (!colliding && d < sumDiam) {
       // Yes, make new velocities!
       colliding = true;
-	  
+	  // Yes, send message to pd :)
+	  patch.send("pjsdrums","bang");
 	  
       // Direction of one object another
       PVector n = PVector.sub(other.loc,loc);
