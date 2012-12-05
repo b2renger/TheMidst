@@ -27,7 +27,7 @@ void draw() {
 	hero.makeAppear();
   }
   else {
-	patch.send("pjsquit","bang");
+	patch.send("pjsquit",0);
   }
   hero.go();
   
@@ -73,13 +73,13 @@ void draw() {
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
-	patch.send("pjsdrums","bang");
+	patch.send("pjstick","bang");
   }
   if (hero.loc.y<5){
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
-	patch.send("pjsdrums","bang");
+	patch.send("pjstick","bang");
   }
   if (hero.loc.x>185){
 	movingOn = true;

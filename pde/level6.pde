@@ -24,6 +24,9 @@ void drawVector(PVector v, PVector loc, float scayl) {
   rotate(v.heading2D());
   // Calculate length of vector & scale it to be bigger or smaller if necessary
   float len = v.mag()*scayl;
+ 
+   leng = map(len, 15,40, 0.0, 0.10);
+  patch.send("pdnoisevol",leng);
   // Draw three lines to make an arrow (draw pointing up since we've rotate to the proper direction)
   stroke(255);
   strokeWeight(1);
@@ -63,9 +66,7 @@ void draw() {
 		patch.send("pjsquit","bang");
 	}
 	hero.go();
-  
-	
-  
+ 
 	// SOUND !!
 	float pdtwee1 = map(cos(hero.tweenfactor/4),-1,1,0,1);
 	patch.send("pjstween1",pdtwee1);
@@ -107,7 +108,7 @@ void draw() {
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
-	patch.send("pjsdrums","bang");
+	patch.send("pjstick","bang");
   }
   if (hero.loc.y<25){
     movingOn = true;
@@ -115,7 +116,6 @@ void draw() {
 	if (hero.alph<10){
 		patch.stop();
 		popUp(0);
-		closeWindows(6);	
 	}
   }
   if (hero.loc.x>175){
@@ -124,7 +124,6 @@ void draw() {
 	if (hero.alph<10){
 		patch.stop();
 		popUp(7);
-		closeWindows(6);	
 	}
   }
   if (hero.loc.y>175){
@@ -133,7 +132,7 @@ void draw() {
 	if (hero.alph<10){
 		patch.stop();
 		popUp(12);
-		closeWindows(6);
+		
 	}
   } 
 }

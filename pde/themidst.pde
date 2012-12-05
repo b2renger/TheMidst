@@ -1,4 +1,4 @@
-/* @pjs font = "fonts/peach-sundress.ttf,"fonts/ReenieBeanie.ttf"; */
+/* @pjs font = "fonts/peach-sundress.ttf,"fonts/TheGirlNextDoor.ttf"; */
 
  // binding processing and js
 interface JavaScript {
@@ -59,7 +59,7 @@ void setup() {
   whiteMeanies = new PixelCloud();
 
   title = createFont("fonts/peach-sundress.ttf",72);
-  font = createFont("fonts/ReenieBeanie.ttf",28);
+  font = createFont("fonts/TheGirlNextDoor.ttf",20);
 }
 
 
@@ -164,7 +164,7 @@ void draw() {
 
   if (frameCount>timer2+250) {
     float targetX = 670;
-    float targetY = height-30;
+    float targetY = height-25;
 
     float dX = targetX - heroBoy.loc.x;
     float dY = targetY - heroBoy.loc.y;
@@ -176,7 +176,7 @@ void draw() {
 
   if (frameCount>timer2+400) {
     float targetX =mouseX ;
-    float targetY = height-150;
+    float targetY = height-(random(5)+20);
 
     float dX = targetX - heroGirl.loc.x;
     float dY = targetY - heroGirl.loc.y;
@@ -216,14 +216,14 @@ void draw() {
   }
 
   displayText ("- it's attracting me ! I can't escape !", timer3, timer3+200, heroGirl.loc.x, heroGirl.loc.y-150, "GIRL", 100);
-  displayText ("- Let go of me stupid cloud !", timer3+250, timer3+450, heroGirl.loc.x, heroGirl.loc.y, "GIRL", 100);
+  displayText ("- Let go of me stupid cloud !", timer3+350, timer3+550, heroGirl.loc.x, heroGirl.loc.y, "GIRL", 100);
 
   // inline html : " yeah ... you are totally responsible for that ! Shame on you!"
-  if (frameCount >timer3+50 && frameCount <timer3 +500){
+  if (frameCount >timer3+150 && frameCount <timer3 +500){
 	showText("yep ! ... you are totally responsible for that ! Shame on you!");
   }
 
-  if (frameCount> timer3 +200) {
+  if (frameCount> timer3 +150) {
     float targetX =-150 ;
     float targetY = -10;
     float dX = targetX - heroBoy.loc.x;
@@ -242,16 +242,18 @@ void draw() {
   // inline : WTF ?? you don't even go after her ?
   if (frameCount >timer3+1300 && frameCount <timer3 +1500){
 	showText("WTF ?? you don't even go after her ?");
+	patch.send("pdquit",0);
   }
 
   displayText ("- I'm sure it's going to be hard with traps and everything...", timer3+1500, timer3+1700, heroBoy.loc.x, 430, "BOY", 100);
   displayText ("- plus she was a little boring ...", timer3+1700, timer3+1900, heroBoy.loc.x, 460, "BOY", 100);
   displayText ("- actually I'd rather stay here, and enjoy the mood...", timer3+1900, timer3+2100, heroBoy.loc.x, 460, "BOY", 100);
+  	
 }
   // inline : what a helpless coward and lazy hero ... if you still want to play, you should probably press start as you can't count on him...
   if (frameCount >timer3+2100 && frameCount <timer3 +5000){
 	showText("what a helpless coward and lazy hero ... if you still want to play, you should probably press start as you can't count on him...");
-	patch.send("pdquit","bang");
+
   } 
   
   if (frameCount>timer3 + 5000){

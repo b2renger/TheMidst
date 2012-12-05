@@ -116,6 +116,7 @@ noStroke();
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.x>190){
 	movingOn = true;
@@ -271,18 +272,27 @@ class Hero {
     if (!colliding && d < sumDiam) {
       // Yes, make new velocities!
       colliding = true;
+	  patch.send("pjstouched",0);
 	  
     } 
     else if (d > sumDiam) {
       colliding = false;
     }
 	if (colliding){
+	//movingOn = true;
 	
-	makeDisappear();
+	//makeDisappear();
+	//if (hero.alph<10){
 	int goTo = (int)random(17);
-		closeWindows(3);
-		popUp(3);
+	hero.setAcc(new PVector(0, 0));
+	hero.setVel(new PVector(0, 0));
+	hero.loc.x = width/2;
+	hero.loc.y = height/2;
+		//closeWindows(3);
+		//popUp(3);
+		//movingOn = false;
 	colliding=false;
+	//}
 	
 	
 		

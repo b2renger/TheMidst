@@ -91,8 +91,11 @@ void draw() {
       hero.collideEqualMass(mh);
       if (hero.colliding == true){
         //println("dead");
-		popUp(4);
-        
+		patch.send("pjstouched",0);
+        hero.setAcc(new PVector(0, 0));
+	hero.setVel(new PVector(0, 0));
+	hero.loc.x = width/2;
+	hero.loc.y = height/2;
       }
     
   }
@@ -117,26 +120,28 @@ void draw() {
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(3);
-	closeWindows(4);
+	//closeWindows(4);
 	}
   }
   if (hero.loc.y<5) {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.x>185) {
     movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(5);
-	closeWindows(4);
+	//closeWindows(4);
 	}
   }
   if (hero.loc.y>195) {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
 }
 
