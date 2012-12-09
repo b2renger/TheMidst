@@ -81,6 +81,7 @@ void draw() {
     newV.x = newX;
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjshit",0);
   }
   ph2.drawMe();
   
@@ -91,6 +92,7 @@ void draw() {
     b.update(hero);
     if (b.touched >0){
       bricks.remove(i); 
+	  //patch.send("pjslighthit",0);
     } 
   }
   
@@ -99,12 +101,18 @@ void draw() {
   StrongBrick sb = (StrongBrick) strongBricks.get(i);
     sb.display();
     sb.update(hero);
+	//boolean hit = false;
     if (sb.touched >0){
+		
         sb.grayVal = 200;   
     }
     if (sb.touched >1){
+	//hit = true;
       strongBricks.remove(i);   
     }
+	
+	
+	
   }
 
 
@@ -299,7 +307,7 @@ class Brick {
     if ((h.loc.x+h.diameter/2)>xpos &&
       (h.loc.x-h.diameter/2)<xpos+bwidth &&
       (h.loc.y+h.diameter/2)>ypos) {
-         
+         patch.send("pjslighthit",0);
       PVector newV = h.getVel();
       newV.y*=-1;
       h.setVel(newV);
@@ -310,12 +318,12 @@ class Brick {
 
 
 class StrongBrick extends Brick{
-  int nTouched;
+  boolean nTouched;
   int grayVal;
   
   StrongBrick(float xpos0, float ypos0, float bwidth0, float bheight0){
     super(xpos0,ypos0,bwidth0,bheight0);
-    nTouched = 0;
+    nTouched = false;
     grayVal = 150;
     
   }
@@ -333,6 +341,19 @@ class StrongBrick extends Brick{
     popMatrix();
     popStyle();
   }
+  
+  void update(Hero h) {
+    if ((h.loc.x+h.diameter/2)>xpos &&
+      (h.loc.x-h.diameter/2)<xpos+bwidth &&
+      (h.loc.y+h.diameter/2)>ypos) {
+         
+      PVector newV = h.getVel();
+      newV.y*=-1;
+      h.setVel(newV);
+	  patch.send("pjsstronghit",0);
+      touched += 1;
+    }
+	}
   
   
   

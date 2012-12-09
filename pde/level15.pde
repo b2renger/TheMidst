@@ -89,6 +89,7 @@ void draw() {
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
 
   if (hero.loc.x>185) {
@@ -96,7 +97,7 @@ void draw() {
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(16);
-	closeWindows(15);
+	//closeWindows(15);
 	}
     
   }
@@ -106,7 +107,7 @@ void draw() {
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(9);
-	closeWindows(15);
+	//closeWindows(15);
 	}
     
   }
@@ -115,6 +116,7 @@ void draw() {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
 
   for (int i = 0 ; i < segments.size() ; i++) {
@@ -123,6 +125,7 @@ void draw() {
     handleCollisions(hero, seg);
 
     if (seg.alive == false) {
+		patch.send("pjstouched",0);
       segments.remove(i);
     }
   }
@@ -219,11 +222,11 @@ class Hero {
 
   // time related functions
   void makeAppear() {
-    alph+=1;
+    alph+=10;
     alph = constrain(alph, 0, 180);
   }
   void makeDisappear() {
-    alph-=1;
+    alph-=10;
     alph = constrain(alph, 0, 180);
   }
 }

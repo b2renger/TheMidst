@@ -8,7 +8,7 @@
 #X obj 124 195 *~;
 #X obj 270 -80 mtof;
 #X obj 270 195 *~;
-#X obj 508 627 dac~;
+#X obj 563 747 dac~;
 #X msg 151 -271 bang;
 #X obj 270 -53 phasor~;
 #X obj 271 -24 -~ 0.5;

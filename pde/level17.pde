@@ -97,7 +97,7 @@ void draw() {
      floors.remove(i); 
     }
   }
-
+/*
   if (mousePressed) {
     // Compute difference vector between mouse and object location
     // 3 steps -- (1) Get Mouse Location, (2) Get Difference Vector, (3) Normalize difference vector
@@ -111,14 +111,19 @@ void draw() {
   } 
   else {
     hero.setAcc(new PVector(0, 0));
-  }
+  }*/
+  
+  hero.loc.x = mouseX;
+  PVector gravity = new PVector(0,0.5);
+	//noiseFactor += 0.005;
+	hero.applyForce(gravity);
   
   if (hero.loc.x<15){
     movingOn = true;
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(16);
-	  closeWindows(17);
+	  //closeWindows(17);
     }
   }
   
@@ -132,7 +137,7 @@ void draw() {
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(18);
-	  closeWindows(17);
+	  //closeWindows(17);
     }
     
   }
@@ -142,7 +147,7 @@ void draw() {
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(11);
-	  closeWindows(17);
+	  //closeWindows(17);
     }
   }
   
@@ -247,11 +252,11 @@ class Hero {
 
   // time related functions
   void makeAppear() {
-    alph+=1;
+    alph+=10;
     alph = constrain(alph,0,180);
   }
   void makeDisappear() {
-    alph-=1;
+    alph-=10;
     alph = constrain(alph,0,180);
   }
 }
@@ -273,7 +278,6 @@ class Floor{
       
     }
     float dif = x2Gap-x1Gap;
-    
      
   }
   
@@ -290,6 +294,9 @@ class Floor{
   void collide(Hero h){
     if(h.loc.y > ypos-h.diameter && h.loc.y < ypos){
       if (h.loc.x-h.diameter/2<x1Gap || h.loc.x+h.diameter/2>x2Gap){
+	 // PVector newV = hero.getVel();
+    //newV.y*=-0.5;
+    //hero.setVel(newV);
         h.loc.y = ypos-h.diameter/2;
       }
     }

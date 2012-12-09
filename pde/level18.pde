@@ -32,9 +32,9 @@ void setup() {
 
   // 2. the arcs
   arcs = new ArrayList();
-  for (int i=1; i<6; i++) { 
+  for (int i=1; i<5; i++) { 
     arcs.add(new Arc(width/2, height/2, 
-    i*120, i*120, 
+    i*150, i*150, 
     random (PI/3, PI), random (TWO_PI, TWO_PI-PI/2)));
   }
 
@@ -56,7 +56,30 @@ void draw() {
       Arc a = (Arc) arcs.get(i);  
       a.display();
       a.collide(hero);
-    }
+	  if ( a.hit ==false){
+		if (i == 0){
+		patch.send("pdtri",0);
+		}
+		else if (i ==1){
+		//patch.send("pdkick",0);	
+		}
+		else if (i==2){
+		//patch.send("pdchords",0);
+		}
+		else if (i==3){
+		//patch.send("pdnoises1",0);
+		}
+		else if (i==4) {
+		//patch.send("pdnoise2",0);
+		}
+	} else if ( a.hit == true){
+            for (int j =0; j<=i ;j++){
+              Arc a2 = (Arc) arcs.get(j);
+              a2.aColor = color(255,0,0);
+              a2.hit = false;
+            }
+}
+  }
     // move hero if mousePressed
     if (mousePressed) {
       // Compute difference vector between mouse and object location
@@ -75,7 +98,7 @@ void draw() {
   }
 
   //friction force
-  float c = -0.23;                            // Drag coefficient
+  float c = -0.25;                            // Drag coefficient
   PVector heroVel = hero.getVel();              // Velocity of our thing
   PVector force = PVector.mult(heroVel, c);   // Following the formula
   hero.applyForce(force);    // Adding the force to our object, which will ultimately affect its acc
@@ -88,8 +111,9 @@ void draw() {
 
   // check if outside the maze and unlock if it is the case.
   float heroDist = dist (hero.loc.x, hero.loc.y, width/2, height/2);
-  if (heroDist>310) {
+  if (locked && heroDist>310) {
     locked = false;
+	//patch.send("endingmusic",0);
   }
 
   // if unlocked it's the end ! ...
@@ -155,9 +179,6 @@ void draw() {
       displayText ("Sébastien Piquemal - developper of Webpd", timer+2700, timer+2900, 10, height*4/8, 100);
       displayText ("and Sébastien again for his precious advices", timer+2900, timer+3100, 10, height*4/8, 100);
       
-
-
-
 
       // and start our surpise !!
       ps.run();
@@ -246,10 +267,13 @@ class Arc {
   float noiseFactor = random(500);
   float strokeW;
   float alphV =255;
-
+  
+  boolean hit = false;
+	
+  
   Arc(float xpos0, float ypos0, 
   float awidth0, float aheight0, 
-  float astart0, float astop0) {
+  float astart0, float astop0 ) {
     xpos = xpos0;
     ypos = ypos0;
     awidth = awidth0;
@@ -258,6 +282,7 @@ class Arc {
     astop = astop0;
     updater = random(1, 2)/100; 
     strokeW=1;
+	
   }
 
   void display() {
@@ -295,6 +320,7 @@ class Arc {
   }
 
   void checkPlayerWithinDoor () {
+    
 
     // hero 
     PVector Pos1=new PVector( hero.loc.x, hero.loc.y);
@@ -322,13 +348,26 @@ class Arc {
     }
 
     if (myAngleStart>myAngleStart3 && 
-      myAngleStart<=myAngleStart2) {
+      myAngleStart<=myAngleStart2 ) {
       // println("True");
       aColor = color (0, 255, 0);
+      hit= false;
     } // if
     else {
       aColor = color (255, 0, 0);
+	  hero.setAcc(new PVector(0, 0));
+	  hero.setVel(new PVector(0, 0));
       hero.setLoc(new PVector(width/2, height/2));
+      hit = true;
+      
+	  patch.send("pdtri",0.05);
+	  patch.send("pdchords",0.015);
+	  patch.send("pdnoises1",0.5);
+	  patch.send("pdnoises2",0.5);
+	  patch.send("pdkick",0.25);
+
+	  
+	  
     }
   } // func
 

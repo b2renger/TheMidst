@@ -12,7 +12,7 @@ void setup() {
   PVector a = new PVector(0, 0);
   
   
-  PVector v = new PVector(random(-1.5, 1.5), random(-1.5,1.5));
+  PVector v = new PVector(random(-0.5, 0.5) +1, random(-0.5,0.5)+1);
   PVector l = new PVector(width/2, height/2);
   hero = new Hero(a, v, l);
   rectMode(CENTER);
@@ -65,11 +65,11 @@ void draw() {
    hero.loc.x<pv1.xpos+pv1.pwidth/2
   && hero.loc.y>pv1.ypos-pv1.pheight/2
   && hero.loc.y<pv1.ypos+pv1.pheight/2){
-    
+    patch.send("pjshit",0);
     PVector newV = hero.getVel();
-	float newY =map(hero.loc.y,pv1.ypos-pv1.pheight/2,pv1.ypos+pv1.pheight/2,-1,1);
+	//float newY =map(hero.loc.y,pv1.ypos-pv1.pheight/2,pv1.ypos+pv1.pheight/2,-1.5,1.5);
 	//println(newY);
-	newV.y = newY;
+	//newV.y = newY;
     newV.x*=-1;
     hero.setVel(newV);
     
@@ -82,10 +82,10 @@ void draw() {
   //&& hero.loc.x<pv2.xpos+pv2.pwidth/2
   && hero.loc.y>pv2.ypos-pv2.pheight/2
   && hero.loc.y<pv2.ypos+pv2.pheight/2){
-   
+   patch.send("pjshit",0);
     PVector newV = hero.getVel();
-	float newY =map(hero.loc.y,pv2.ypos-pv2.pheight/2,pv2.ypos+pv2.pheight/2,-1,1);
-	newV.y = newY;
+	//float newY =map(hero.loc.y,pv2.ypos-pv2.pheight/2,pv2.ypos+pv2.pheight/2,-1.5,1.5);
+	//newV.y = newY;
     newV.x*=-1;
     hero.setVel(newV);
     
@@ -99,10 +99,10 @@ void draw() {
   && hero.loc.y>ph1.ypos-ph1.pheight/2
   //&& hero.loc.y<ph1.ypos+ph1.pheight/2
   ){
-    
+    patch.send("pjshit",0);
     PVector newV = hero.getVel();
-	float newX =map(hero.loc.x,ph1.xpos-ph1.pwidth/2,ph1.xpos+ph1.pwidth/2,-1,1);
-	newV.x = newX;
+	//float newX =map(hero.loc.x,ph1.xpos-ph1.pwidth/2,ph1.xpos+ph1.pwidth/2,-1.5,1.5);
+	//newV.x = newX;
     newV.y*=-1;
     hero.setVel(newV);
     
@@ -114,36 +114,23 @@ void draw() {
   && hero.loc.x<ph2.xpos+ph2.pwidth/2
   //&& hero.loc.y>ph2.ypos-ph2.pheight/2
   && hero.loc.y<ph2.ypos+ph2.pheight/2){
+	patch.send("pjshit",0);
     PVector newV = hero.getVel();
 	// yeah weird collision !
-	float newX =map(hero.loc.x,ph2.xpos-ph2.pwidth/2,ph2.xpos+ph2.pwidth/2,-1,1);
-	newV.x = newX;
+	//float newX =map(hero.loc.x,ph2.xpos-ph2.pwidth/2,ph2.xpos+ph2.pwidth/2,-1.5,1.5);
+	//newV.x = newX;
     newV.y*=-1;
     hero.setVel(newV);
   }
   
-/*
-  if (mousePressed) {
-    // Compute difference vector between mouse and object location
-    // 3 steps -- (1) Get Mouse Location, (2) Get Difference Vector, (3) Normalize difference vector
-    PVector m = new PVector(mouseX, mouseY);
-    PVector diff = PVector.sub(m, hero.getLoc());
-    diff.normalize();
-    float factor = 0.1;  // Magnitude of Acceleration (not increasing it right now)
-    diff.mult(factor);
-    //object accelerates towards mouse
-    hero.setAcc(diff);
-  } 
-  else {
-    hero.setAcc(new PVector(0, 0));
-  }*/
+
   // boundaries
   if (hero.loc.x<5) {
     movingOn = true;
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(8);
-	  closeWindows(9);
+	  
     }
   }
   if (hero.loc.y<5) {
@@ -151,7 +138,7 @@ void draw() {
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(3);
-	  closeWindows(9);
+	  
     }
   }
   if (hero.loc.x>195) {
@@ -159,7 +146,7 @@ void draw() {
     hero.makeDisappear();
     if (hero.alph<10) {
      popUp(10);
-	 closeWindows(9);
+	 
     }
   }
   if (hero.loc.y>195) {
@@ -167,7 +154,7 @@ void draw() {
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(15);
-	  closeWindows(9);
+	  
     }
   }
 }
@@ -299,34 +286,6 @@ class Hero {
   }
 
 
-  // collide with paddle
-  void collidePaddleV(Paddle myPaddle) {
-    if(loc.x>myPaddle.xpos-myPaddle.pwidth/2 
-    && loc.x<myPaddle.xpos+myPaddle.pwidth/2
-    && loc.y>myPaddle.ypos-myPaddle.pheight/2
-    && loc.y<myPaddle.ypos-myPaddle.pheight/2
-    ){
-
-
-    PVector newV = vel;
-    newV.y*=-1;
-    hero.setVel(newV);
-    }
-  }
-
-
-  void collidePaddleH(Paddle myPaddle) {
-    if(loc.x>myPaddle.xpos-myPaddle.pwidth/2 
-    && loc.x<myPaddle.xpos+myPaddle.pwidth/2
-    && loc.y>myPaddle.ypos-myPaddle.pheight/2
-    && loc.y<myPaddle.ypos-myPaddle.pheight/2
-    ){
-
-
-    PVector newV = hero.getVel();
-    newV.x*=-1;
-    hero.setVel(newV);
-  }
-  }
+  
 }
 

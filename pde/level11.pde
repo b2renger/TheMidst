@@ -224,11 +224,11 @@ class Hero {
 
   // time related functions
   void makeAppear() {
-    alph+=1;
+    alph+=10;
     alph = constrain(alph,0,180);
   }
   void makeDisappear() {
-    alph-=1;
+    alph-=10;
     alph = constrain(alph,0,180);
   }
 }

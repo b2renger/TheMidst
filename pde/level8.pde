@@ -63,6 +63,7 @@ void draw() {
    hero.loc.x-hero.diameter/2<pv1.xpos+pv1.pwidth/2
   && hero.loc.y+hero.diameter/2>pv1.ypos-pv1.pheight/2
   && hero.loc.y-hero.diameter/2<pv1.ypos+pv1.pheight/2){
+	patch.send("pjshit",0);
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
@@ -74,6 +75,7 @@ void draw() {
   if (hero.loc.x+hero.diameter/2>pv2.xpos-pv2.pwidth/2
   && hero.loc.y+hero.diameter/2>pv2.ypos-pv2.pheight/2
   && hero.loc.y-hero.diameter/2<pv2.ypos+pv2.pheight/2){ 
+  patch.send("pjshit",0);
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);  
@@ -85,6 +87,8 @@ void draw() {
   && hero.loc.x-hero.diameter/2<ph1.xpos+ph1.pwidth/2
   && hero.loc.y+hero.diameter/2>ph1.ypos-ph1.pheight/2
   ){
+  
+  patch.send("pjshit",0);
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);  
@@ -95,6 +99,7 @@ void draw() {
   if (hero.loc.x+hero.diameter/2>ph2.xpos-ph2.pwidth/2
   && hero.loc.x-hero.diameter/2<ph2.xpos+ph2.pwidth/2
   && hero.loc.y-hero.diameter/2<ph2.ypos+ph2.pheight/2){
+  patch.send("pjshit",0);
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
@@ -121,18 +126,20 @@ void draw() {
    PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.y<5) {
    PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.x>195) {
     movingOn = true;
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(9);
-	  closeWindows(8);
+	  
     }
   }
   if (hero.loc.y>195) {
@@ -140,7 +147,7 @@ void draw() {
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(14);
-	  closeWindow(8);
+	  
     }
   }
 }

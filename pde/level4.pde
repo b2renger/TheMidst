@@ -15,7 +15,7 @@ void setup() {
   hero = new Hero(a, v, l, 20,4);
 
   miniheroes = new ArrayList();
-  for ( int i = 0 ; i <6 ; i++) {
+  for ( int i = 0 ; i <7 ; i++) {
 
     PVector amh = new PVector(0.0, 0.0);
     PVector vmh = new PVector(0.0, 0.0);
@@ -93,9 +93,9 @@ void draw() {
         //println("dead");
 		patch.send("pjstouched",0);
         hero.setAcc(new PVector(0, 0));
-	hero.setVel(new PVector(0, 0));
-	hero.loc.x = width/2;
-	hero.loc.y = height/2;
+		hero.setVel(new PVector(0, 0));
+		hero.loc.x = width/2;
+		hero.loc.y = height/2;
       }
     
   }
@@ -251,7 +251,7 @@ class Hero {
   // collision
   void collideEqualMass(Hero other) {
     float d = PVector.dist(loc, other.loc);
-    float sumDiam = diameter + other.diameter;
+    float sumDiam = diameter/2 + other.diameter/2;
     // Are they colliding?
     if (!colliding && d < sumDiam) {
       // Yes, make new velocities!
@@ -292,8 +292,8 @@ class MiniHero extends Hero{
   
   void update(){
     
-    float xAcc = random(-1,1); //map(noise(noiseFactor,n1,n2),0,1,-1,1);
-    float yAcc = random(-1,1); //map(noise(noiseFactor2,n2,n1),0,1,-1,1);
+    float xAcc = random(-0.5,0.5); //map(noise(noiseFactor,n1,n2),0,1,-1,1);
+    float yAcc = random(-0.5,0.5); //map(noise(noiseFactor2,n2,n1),0,1,-1,1);
     
     PVector newAcc = new PVector (xAcc,yAcc);
     vel.add(newAcc);
@@ -304,8 +304,8 @@ class MiniHero extends Hero{
       vel.normalize();
       vel.mult(maxvel);
     }
-    noiseFactor += 0.95;
-    noiseFactor2 +=0.95;
+    //noiseFactor += 0.95;
+    //noiseFactor2 +=0.95;
     
   }
   

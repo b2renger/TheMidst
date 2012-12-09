@@ -87,23 +87,26 @@ void draw() {
 	//println(hero.alph);
     if (hero.alph<10) {
       popUp(9);
-	  closeWindows(10);
+	  //closeWindows(10);
     }
   }
   if (hero.loc.x>195) {
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.y<5) {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.y>195) {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
 
   // draw broke quad
@@ -124,31 +127,39 @@ void draw() {
       PVector newV = hero.getVel();
       newV.x*=-1;
       hero.setVel(newV);
+	  patch.send("pjshit",0);
     }
     if ((hero.loc.y-hero.diameter/2)<52) {
       PVector newV = hero.getVel();
       newV.y*=-1;
       hero.setVel(newV);
+	  patch.send("pjshit",0);
     }
     if ((hero.loc.y+hero.diameter/2)>148) {
       PVector newV = hero.getVel();
       newV.y*=-1;
       hero.setVel(newV);
+	  patch.send("pjshit",0);
     }
     if ((hero.loc.x+hero.diameter/2)>148) {
       if ((hero.loc.y-hero.diameter/2)<85 || (hero.loc.y+hero.diameter/2)>115) {
         PVector newV = hero.getVel();
         newV.x*=-1;
         hero.setVel(newV);
+		patch.send("pjshit",0);
       }
       else {
         jailed = false;
+		patch.send("verb",70);
+	  patch.send("feedback",70);
       }
     } 
   }
   else if (jailed == false) {
       alphaVal -=1;
-      alphaVal = constrain (alphaVal,25,180);
+      alphaVal = constrain (alphaVal,5,180);
+	  
+	  
     }
 }
 
@@ -244,11 +255,11 @@ class Hero {
 
   // time related functions
   void makeAppear() {
-    alph+=1;
+    alph+=10;
     alph = constrain(alph, 0, 180);
   }
   void makeDisappear() {
-    alph-= 1;
+    alph-= 10;
     alph = constrain(alph, 0, 180);
   }
 

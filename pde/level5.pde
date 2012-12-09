@@ -15,13 +15,15 @@ void setup() {
   hero = new Hero(a, v, l,20);
   
   miniheroes = new ArrayList();
-  for( int i = 0 ; i <15 ; i++){
+  for( int i = 0 ; i <5 ; i++){
   
   PVector amh = new PVector(0.0, 0.0);
   PVector vmh = new PVector(0.0, 0.0);
-  PVector lmh = new PVector(random(10,width-10),random(10,height-10));
+  PVector lmh = new PVector(random(10,90),random(10,height-10));
   
-  miniheroes.add(new Hero(amh,vmh,lmh,8));
+  
+	 
+  miniheroes.add(new Hero(amh,vmh,lmh,5));
   
   }
   
@@ -127,12 +129,12 @@ void draw() {
     hero.setAcc(new PVector(0, 0));
   }
   // boundaries
-  if (hero.loc.x<15){
+  if (hero.loc.x<8){
     movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(4);
-	closeWindows(5);
+	//closeWindows(5);
 	}
   
   }
@@ -140,18 +142,20 @@ void draw() {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.x>195){
   PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   if (hero.loc.y>185){
   movingOn = true;
 	hero.makeDisappear();
 	if (hero.alph<10){
 	popUp(11);
-	closeWindows(5);
+	//closeWindows(5);
 	}
   }
   
@@ -268,11 +272,12 @@ class Hero {
   // collision
   void collideEqualMass(Hero other) {
     float d = PVector.dist(loc,other.loc);
-    float sumDiam = diameter + other.diameter;
+    float sumDiam = diameter/2 + other.diameter/2;
     // Are they colliding?
     if (!colliding && d < sumDiam) {
       // Yes, make new velocities!
       colliding = true;
+	  patch.send("pjstouched",0);
       // Direction of one object another
       PVector n = PVector.sub(other.loc,loc);
       n.normalize();
