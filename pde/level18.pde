@@ -1,4 +1,4 @@
-/* @pjs font = "fonts/peach-sundress.ttf,"fonts/ReenieBeanie.ttf"; */
+/* @pjs font = "fonts/peach-sundress.ttf,"fonts/TheGirlNextDoor.ttf"; */
 
 // let's do some processing
 
@@ -41,7 +41,7 @@ void setup() {
   // 3. ending surprise
   ps = new ParticleSystem(100, new PVector(width/2, height/2, 0));
 
-  font = createFont("fonts/ReenieBeanie.ttf",38);
+  font = createFont("fonts/TheGirlNextDoor",38);
   textFont(font);
 }
 
@@ -61,16 +61,16 @@ void draw() {
 		patch.send("pdtri",0);
 		}
 		else if (i ==1){
-		//patch.send("pdkick",0);	
+		patch.send("pdkick",0);	
 		}
 		else if (i==2){
-		//patch.send("pdchords",0);
+		patch.send("pdchords",0);
 		}
 		else if (i==3){
-		//patch.send("pdnoises1",0);
+		patch.send("pdnoises1",0);
 		}
 		else if (i==4) {
-		//patch.send("pdnoise2",0);
+		patch.send("pdnoise2",0);
 		}
 	} else if ( a.hit == true){
             for (int j =0; j<=i ;j++){
@@ -113,7 +113,7 @@ void draw() {
   float heroDist = dist (hero.loc.x, hero.loc.y, width/2, height/2);
   if (locked && heroDist>310) {
     locked = false;
-	//patch.send("endingmusic",0);
+	patch.send("endingmusic",0);
   }
 
   // if unlocked it's the end ! ...

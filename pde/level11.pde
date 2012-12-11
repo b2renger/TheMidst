@@ -103,12 +103,14 @@ void draw() {
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   
   if (hero.loc.x>195){
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
   
   if (hero.loc.y<15){

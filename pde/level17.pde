@@ -97,7 +97,7 @@ void draw() {
      floors.remove(i); 
     }
   }
-/*
+
   if (mousePressed) {
     // Compute difference vector between mouse and object location
     // 3 steps -- (1) Get Mouse Location, (2) Get Difference Vector, (3) Normalize difference vector
@@ -111,12 +111,12 @@ void draw() {
   } 
   else {
     hero.setAcc(new PVector(0, 0));
-  }*/
+  }
   
-  hero.loc.x = mouseX;
-  PVector gravity = new PVector(0,0.5);
+  //hero.loc.x = mouseX;
+  //PVector gravity = new PVector(0,0.5);
 	//noiseFactor += 0.005;
-	hero.applyForce(gravity);
+	//hero.applyForce(gravity);
   
   if (hero.loc.x<15){
     movingOn = true;
@@ -131,15 +131,16 @@ void draw() {
     PVector newV = hero.getVel();
     newV.x*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
+  
   if (hero.loc.x>185 && hero.loc.y > 50){
   ovingOn = true;
     hero.makeDisappear();
     if (hero.alph<10) {
       popUp(18);
 	  //closeWindows(17);
-    }
-    
+    }  
   }
   
   if (hero.loc.y<15){
@@ -155,6 +156,7 @@ void draw() {
     PVector newV = hero.getVel();
     newV.y*=-1;
     hero.setVel(newV);
+	patch.send("pjstick",0);
   }
 
 }
@@ -294,7 +296,7 @@ class Floor{
   void collide(Hero h){
     if(h.loc.y > ypos-h.diameter && h.loc.y < ypos){
       if (h.loc.x-h.diameter/2<x1Gap || h.loc.x+h.diameter/2>x2Gap){
-	 // PVector newV = hero.getVel();
+	// PVector newV = hero.getVel();
     //newV.y*=-0.5;
     //hero.setVel(newV);
         h.loc.y = ypos-h.diameter/2;
